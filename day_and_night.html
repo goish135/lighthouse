@@ -9,9 +9,11 @@
         <a href="https://www.tsmc.com/static/abouttsmcaz/index.htm" style="color: inherit;">
             TSMC Arizona Time
         </a>: 
-        <span id="arizona-time"></span>
+        <span id="arizona-datetime"></span>
     </p>
-    <p>Taiwan Time: <span id="taiwan-time"></span></p>
+    <p>Taiwan Time: 
+        <span id="taiwan-datetime"></span>
+    </p>
 
     <script>
         function updateTime() {
@@ -19,7 +21,7 @@
             const now = new Date();
 
             // Options for formatting the time
-            const options = {
+            const timeOptions = {
                 hour: '2-digit',
                 minute: '2-digit',
                 second: '2-digit',
@@ -27,21 +29,38 @@
                 timeZoneName: 'short'
             };
 
-            // Format time for Arizona
-            const arizonaTime = now.toLocaleString('en-US', {
-                ...options,
+            // Options for formatting the date
+            const dateOptions = {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            };
+
+            // Format date and time for Arizona
+            const arizonaDate = now.toLocaleString('en-US', {
+                ...dateOptions,
                 timeZone: 'America/Phoenix'
             });
+            const arizonaTime = now.toLocaleString('en-US', {
+                ...timeOptions,
+                timeZone: 'America/Phoenix'
+            });
+            const arizonaDateTime = `${arizonaDate} ${arizonaTime}`;
 
-            // Format time for Taiwan
-            const taiwanTime = now.toLocaleString('en-US', {
-                ...options,
+            // Format date and time for Taiwan
+            const taiwanDate = now.toLocaleString('en-US', {
+                ...dateOptions,
                 timeZone: 'Asia/Taipei'
             });
+            const taiwanTime = now.toLocaleString('en-US', {
+                ...timeOptions,
+                timeZone: 'Asia/Taipei'
+            });
+            const taiwanDateTime = `${taiwanDate} ${taiwanTime}`;
 
-            // Update the HTML elements with the current times
-            document.getElementById('arizona-time').textContent = arizonaTime;
-            document.getElementById('taiwan-time').textContent = taiwanTime;
+            // Update the HTML elements with the current times and dates
+            document.getElementById('arizona-datetime').textContent = arizonaDateTime;
+            document.getElementById('taiwan-datetime').textContent = taiwanDateTime;
         }
 
         // Update the time immediately
