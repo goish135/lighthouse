@@ -11,16 +11,15 @@
         </a>: 
         <span id="arizona-datetime"></span>(GMT-7)
     </p>
-    <p>Taiwan Time: 
+    <p>
+        Taiwan Time: 
         <span id="taiwan-datetime"></span>
     </p>
 
     <script>
         function updateTime() {
-            // Get current time
             const now = new Date();
 
-            // Options for formatting the time
             const timeOptions = {
                 hour: '2-digit',
                 minute: '2-digit',
@@ -29,14 +28,15 @@
                 timeZoneName: 'short'
             };
 
-            // Options for formatting the date
+            // 加入 weekday
             const dateOptions = {
                 year: 'numeric',
                 month: '2-digit',
-                day: '2-digit'
+                day: '2-digit',
+                weekday: 'long'   // ★ 加這行就能顯示星期
             };
 
-            // Format date and time for Arizona
+            // Arizona
             const arizonaDate = now.toLocaleString('en-US', {
                 ...dateOptions,
                 timeZone: 'America/Phoenix'
@@ -47,7 +47,7 @@
             });
             const arizonaDateTime = `${arizonaDate} ${arizonaTime}`;
 
-            // Format date and time for Taiwan
+            // Taiwan
             const taiwanDate = now.toLocaleString('en-US', {
                 ...dateOptions,
                 timeZone: 'Asia/Taipei'
@@ -58,15 +58,11 @@
             });
             const taiwanDateTime = `${taiwanDate} ${taiwanTime}`;
 
-            // Update the HTML elements with the current times and dates
             document.getElementById('arizona-datetime').textContent = arizonaDateTime;
             document.getElementById('taiwan-datetime').textContent = taiwanDateTime;
         }
 
-        // Update the time immediately
         updateTime();
-
-        // Update the time every second
         setInterval(updateTime, 1000);
     </script>
 </body>
