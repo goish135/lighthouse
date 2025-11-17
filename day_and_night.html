@@ -5,13 +5,13 @@
     <style>
         body {
             display: flex;
-            justify-content: center;   /* 水平置中 */
-            align-items: center;       /* 垂直置中 */
-            height: 100vh;             /* 全螢幕高度 */
+            justify-content: center;   
+            align-items: center;       
+            height: 100vh;
             margin: 0;
-            background: #f5f5f5;       /* 淺背景，可刪 */
+            background: #f5f5f5;
             font-family: Arial, sans-serif;
-            text-align: center;        /* 內容文字置中 */
+            text-align: center;
         }
         .container {
             padding: 20px;
@@ -19,11 +19,20 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
+        .title-icon {
+            font-size: 40px;   /* icon 大小 */
+            vertical-align: middle;
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>Current Times</h1>
+
+    <h1>
+        <span class="title-icon">🦖</span>
+        Current Times
+    </h1>
 
     <p style="color: green;">
         <a href="https://www.tsmc.com/static/abouttsmcaz/index.htm" style="color: inherit;">
