@@ -64,7 +64,7 @@
             weekday: 'long'
         };
 
-        // Arizona Time
+        // Arizona Time (本地轉成亞利桑那)
         const arizona = new Date(
             now.toLocaleString('en-US', { timeZone: 'America/Phoenix' })
         );
@@ -85,20 +85,23 @@
         });
         const taiwanDateTime = `${taiwanDate} ${taiwanTime}`;
 
-        // Output
         document.getElementById('arizona-datetime').textContent = arizonaDateTime;
         document.getElementById('taiwan-datetime').textContent = taiwanDateTime;
 
-        // === 🌗 Background switch based on AZ time ===
-        const isDay = azHour >= 6 && azHour < 18; // 6 AM ~ 6 PM 視為白天
+        // === 🌗 判斷 AZ 早/晚 + console.log ===
+        const isDay = azHour >= 6 && azHour < 18;
 
         if (isDay) {
+            console.log("AZ 早");
+
             document.body.style.background = "white";
             document.body.style.color = "black";
             document.querySelector('.container').style.background = "rgba(255,255,255,0.8)";
             document.querySelector('.container').style.boxShadow =
                 "0 0 10px rgba(0,0,0,0.2)";
         } else {
+            console.log("AZ 晚");
+
             document.body.style.background = "black";
             document.body.style.color = "white";
             document.querySelector('.container').style.background = "rgba(0,0,0,0.5)";
