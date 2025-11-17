@@ -46,6 +46,8 @@
 </div>
 
 <script>
+    let lastIsDay = null; // ⭐ 記住前一次的狀態（初始為 null）
+
     function updateTime() {
         const now = new Date();
 
@@ -53,66 +55,4 @@
             hour: '2-digit',
             minute: '2-digit',
             second: '2-digit',
-            hour12: true,
-            timeZoneName: 'short'
-        };
-
-        const dateOptions = {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            weekday: 'long'
-        };
-
-        // Arizona Time (本地轉成亞利桑那)
-        const arizona = new Date(
-            now.toLocaleString('en-US', { timeZone: 'America/Phoenix' })
-        );
-        const azHour = arizona.getHours();
-
-        const arizonaDate = arizona.toLocaleString('en-US', dateOptions);
-        const arizonaTime = arizona.toLocaleString('en-US', timeOptions);
-        const arizonaDateTime = `${arizonaDate} ${arizonaTime}`;
-
-        // Taiwan Time
-        const taiwanDate = now.toLocaleString('en-US', {
-            ...dateOptions,
-            timeZone: 'Asia/Taipei'
-        });
-        const taiwanTime = now.toLocaleString('en-US', {
-            ...timeOptions,
-            timeZone: 'Asia/Taipei'
-        });
-        const taiwanDateTime = `${taiwanDate} ${taiwanTime}`;
-
-        document.getElementById('arizona-datetime').textContent = arizonaDateTime;
-        document.getElementById('taiwan-datetime').textContent = taiwanDateTime;
-
-        // === 🌗 判斷 AZ 早/晚 + console.log ===
-        const isDay = azHour >= 6 && azHour < 18;
-
-        if (isDay) {
-            console.log("AZ 早");
-
-            document.body.style.background = "white";
-            document.body.style.color = "black";
-            document.querySelector('.container').style.background = "rgba(255,255,255,0.8)";
-            document.querySelector('.container').style.boxShadow =
-                "0 0 10px rgba(0,0,0,0.2)";
-        } else {
-            console.log("AZ 晚");
-
-            document.body.style.background = "black";
-            document.body.style.color = "white";
-            document.querySelector('.container').style.background = "rgba(0,0,0,0.5)";
-            document.querySelector('.container').style.boxShadow =
-                "0 0 10px rgba(255,255,255,0.3)";
-        }
-    }
-
-    updateTime();
-    setInterval(updateTime, 1000);
-</script>
-
-</body>
-</html>
+            hour1
