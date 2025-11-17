@@ -2,68 +2,88 @@
 <html>
 <head>
     <title>AZ vs TW</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;   /* 水平置中 */
+            align-items: center;       /* 垂直置中 */
+            height: 100vh;             /* 全螢幕高度 */
+            margin: 0;
+            background: #f5f5f5;       /* 淺背景，可刪 */
+            font-family: Arial, sans-serif;
+            text-align: center;        /* 內容文字置中 */
+        }
+        .container {
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+    </style>
 </head>
 <body>
+<div class="container">
     <h1>Current Times</h1>
+
     <p style="color: green;">
         <a href="https://www.tsmc.com/static/abouttsmcaz/index.htm" style="color: inherit;">
             TSMC Arizona Time
         </a>: 
         <span id="arizona-datetime"></span>(GMT-7)
     </p>
+
     <p>
         Taiwan Time: 
         <span id="taiwan-datetime"></span>
     </p>
+</div>
 
-    <script>
-        function updateTime() {
-            const now = new Date();
+<script>
+    function updateTime() {
+        const now = new Date();
 
-            const timeOptions = {
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: true,
-                timeZoneName: 'short'
-            };
+        const timeOptions = {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: true,
+            timeZoneName: 'short'
+        };
 
-            // 加入 weekday
-            const dateOptions = {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                weekday: 'long'   // ★ 加這行就能顯示星期
-            };
+        const dateOptions = {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            weekday: 'long'
+        };
 
-            // Arizona
-            const arizonaDate = now.toLocaleString('en-US', {
-                ...dateOptions,
-                timeZone: 'America/Phoenix'
-            });
-            const arizonaTime = now.toLocaleString('en-US', {
-                ...timeOptions,
-                timeZone: 'America/Phoenix'
-            });
-            const arizonaDateTime = `${arizonaDate} ${arizonaTime}`;
+        const arizonaDate = now.toLocaleString('en-US', {
+            ...dateOptions,
+            timeZone: 'America/Phoenix'
+        });
+        const arizonaTime = now.toLocaleString('en-US', {
+            ...timeOptions,
+            timeZone: 'America/Phoenix'
+        });
+        const arizonaDateTime = `${arizonaDate} ${arizonaTime}`;
 
-            // Taiwan
-            const taiwanDate = now.toLocaleString('en-US', {
-                ...dateOptions,
-                timeZone: 'Asia/Taipei'
-            });
-            const taiwanTime = now.toLocaleString('en-US', {
-                ...timeOptions,
-                timeZone: 'Asia/Taipei'
-            });
-            const taiwanDateTime = `${taiwanDate} ${taiwanTime}`;
+        const taiwanDate = now.toLocaleString('en-US', {
+            ...dateOptions,
+            timeZone: 'Asia/Taipei'
+        });
+        const taiwanTime = now.toLocaleString('en-US', {
+            ...timeOptions,
+            timeZone: 'Asia/Taipei'
+        });
+        const taiwanDateTime = `${taiwanDate} ${taiwanTime}`;
 
-            document.getElementById('arizona-datetime').textContent = arizonaDateTime;
-            document.getElementById('taiwan-datetime').textContent = taiwanDateTime;
-        }
+        document.getElementById('arizona-datetime').textContent = arizonaDateTime;
+        document.getElementById('taiwan-datetime').textContent = taiwanDateTime;
+    }
 
-        updateTime();
-        setInterval(updateTime, 1000);
-    </script>
+    updateTime();
+    setInterval(updateTime, 1000);
+</script>
+
 </body>
 </html>
