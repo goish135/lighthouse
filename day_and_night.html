@@ -70,8 +70,16 @@
         );
         const azHour = arizona.getHours();
 
-        const arizonaDate = arizona.toLocaleString('en-US', dateOptions);
-        const arizonaTime = arizona.toLocaleString('en-US', timeOptions);
+        // const arizonaDate = arizona.toLocaleString('en-US', dateOptions);
+        const arizonaDate = now.toLocaleString('en-US', {
+            ...dateOptions,
+            timeZone: 'America/Phoenix'
+        });        
+        // const arizonaTime = arizona.toLocaleString('en-US', timeOptions);
+        const arizonaTime = now.toLocaleString('en-US', {
+            ...timeOptions,
+            timeZone: 'America/Phoenix'
+        });        
         const arizonaDateTime = `${arizonaDate} ${arizonaTime}`;
 
         // Taiwan Time
