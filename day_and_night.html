@@ -14,23 +14,33 @@
             transition: background 0.5s, color 0.5s;
         }
         .container {
-            padding: 20px;
+            position: relative; /* 讓恐龍可在卡片內絕對定位 */
+            padding: 40px 40px 30px;
             border-radius: 10px;
             transition: background 0.5s, box-shadow 0.5s;
+            min-width: 320px;
+            min-height: 220px;
+            box-sizing: border-box;
         }
-        .title-icon {
+        h1 {
+            margin: 0 0 20px 0;
+        }
+        /* 恐龍 icon */
+        .dino {
+            position: absolute;
             font-size: 40px;
-            margin-right: 10px;
+            transform: translate(-50%, -50%);
+            transition: top 0.5s, left 0.5s, transform 0.5s;
+            pointer-events: none; /* 不擋到點擊 */
         }
     </style>
 </head>
 <body>
 <div class="container">
+    <!-- 跑來跑去的恐龍 -->
+    <span id="dino" class="dino">🦖</span>
 
-    <h1>
-        <span class="title-icon">🦖</span>
-        Current Times
-    </h1>
+    <h1>Current Times</h1>
 
     <p style="color: green;">
         <a href="https://www.tsmc.com/static/abouttsmcaz/index.htm" style="color: inherit;">
@@ -46,6 +56,8 @@
 </div>
 
 <script>
+    const dinoEl = document.getElementById('dino');
+
     function updateTime() {
         const now = new Date();
 
@@ -64,22 +76,22 @@
             weekday: 'long'
         };
 
-        // Arizona Time
+        // Arizona Time（用時區轉換）
         const arizona = new Date(
             now.toLocaleString('en-US', { timeZone: 'America/Phoenix' })
         );
-        const azHour = arizona.getHours();
+        const azHour = arizona.getHours();          // 0 ~ 23
+        const hour12 = azHour % 12;                 // 0 ~ 11，0 代表 12 點
 
-        // const arizonaDate = arizona.toLocaleString('en-US', dateOptions);
+        // 用 now + timeZone 來格式化字串顯示
         const arizonaDate = now.toLocaleString('en-US', {
             ...dateOptions,
             timeZone: 'America/Phoenix'
-        });        
-        // const arizonaTime = arizona.toLocaleString('en-US', timeOptions);
+        });
         const arizonaTime = now.toLocaleString('en-US', {
             ...timeOptions,
             timeZone: 'America/Phoenix'
-        });        
+        });
         const arizonaDateTime = `${arizonaDate} ${arizonaTime}`;
 
         // Taiwan Time
@@ -113,6 +125,27 @@
             document.querySelector('.container').style.boxShadow =
                 "0 0 10px rgba(255,255,255,0.3)";
         }
+
+        // === 🦖 恐龍依 AZ 時針在卡片上不同位置 ===
+        // 12 個位置，模擬時鐘（百分比大概繞一圈）
+        const positions = [
+            { top: '5%',  left: '50%' }, // 0 -> 12 點
+            { top: '15%', left: '80%' }, // 1 點
+            { top: '30%', left: '93%' }, // 2 點
+            { top: '50%', left: '97%' }, // 3 點
+            { top: '70%', left: '93%' }, // 4 點
+            { top: '88%', left: '80%' }, // 5 點
+            { top: '95%', left: '50%' }, // 6 點
+            { top: '88%', left: '20%' }, // 7 點
+            { top: '70%', left: '7%'  }, // 8 點
+            { top: '50%', left: '3%'  }, // 9 點
+            { top: '30%', left: '7%'  }, // 10 點
+            { top: '15%', left: '20%' }  // 11 點
+        ];
+
+        const pos = positions[hour12]; // 0~11 對應上面的表
+        dinoEl.style.top = pos.top;
+        dinoEl.style.left = pos.left;
     }
 
     updateTime();
