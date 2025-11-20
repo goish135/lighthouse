@@ -13,6 +13,52 @@
             text-align: center;
             transition: background 0.5s, color 0.5s;
         }
+
+        /* 外層：提供 3D 視角、置中 */
+        .card-wrapper {
+            perspective: 1200px;
+            width: 80vw;
+            max-width: 520px;
+            min-width: 320px;
+        }
+
+        /* 卡片本體：負責翻轉 */
+        .card {
+            width: 100%;
+            min-height: 220px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+        }
+
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        /* 卡片兩面共用樣式 */
+        .card-face {
+            position: absolute;
+            inset: 0;
+            backface-visibility: hidden;
+        }
+
+        /* 正面 / 背面額外樣式 */
+        .card-front {
+            /* 正面使用原本容器內容 */
+        }
+
+        .card-back {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 36px;
+            font-weight: bold;
+            letter-spacing: 4px;
+            transform: rotateY(180deg);
+        }
+
+        /* 原本的 container，做為每一面的卡片外觀 */
         .container {
             position: relative; /* 讓恐龍可在卡片內絕對定位 */
             padding: 40px 40px 30px;
@@ -22,9 +68,11 @@
             min-height: 220px;
             box-sizing: border-box;
         }
+
         h1 {
             margin: 0 0 20px 0;
         }
+
         /* 恐龍 icon */
         .dino {
             position: absolute;
@@ -36,26 +84,46 @@
     </style>
 </head>
 <body>
-<div class="container">
-    <!-- 跑來跑去的恐龍 -->
-    <span id="dino" class="dino">🦖</span>
 
-    <h1>Current Times</h1>
+<div class="card-wrapper">
+    <div class="card" id="card">
 
-    <p style="color: green;">
-        <a href="https://www.tsmc.com/static/abouttsmcaz/index.htm" style="color: inherit;">
-            TSMC Arizona Time
-        </a>:
-        <span id="arizona-datetime"></span>(GMT-7)
-    </p>
+        <!-- 正面 -->
+        <div class="container card-face card-front">
+            <!-- 跑來跑去的恐龍 -->
+            <span id="dino" class="dino">🦖</span>
 
-    <p>
-        Taiwan Time:
-        <span id="taiwan-datetime"></span>
-    </p>
+            <h1>Current Times</h1>
+
+            <p style="color: green;">
+                <a href="https://www.tsmc.com/static/abouttsmcaz/index.htm" style="color: inherit;">
+                    TSMC Arizona Time
+                </a>:
+                <span id="arizona-datetime"></span>(GMT-7)
+            </p>
+
+            <p>
+                Taiwan Time:
+                <span id="taiwan-datetime"></span>
+            </p>
+        </div>
+
+        <!-- 背面 -->
+        <div class="container card-face card-back">
+            PY 突擊隊
+        </div>
+
+    </div>
 </div>
 
 <script>
+    // === 翻面控制 ===
+    const card = document.getElementById('card');
+    card.addEventListener('click', () => {
+        card.classList.toggle('flipped');
+    });
+
+    // === 時間 ＆ 恐龍 ===
     const dinoEl = document.getElementById('dino');
 
     function updateTime() {
@@ -111,23 +179,25 @@
 
         // === 🌗 Background switch based on AZ time ===
         const isDay = azHour >= 6 && azHour < 18; // 6 AM ~ 6 PM 視為白天
+        const containers = document.querySelectorAll('.container');
 
         if (isDay) {
             document.body.style.background = "white";
             document.body.style.color = "black";
-            document.querySelector('.container').style.background = "rgba(255,255,255,0.8)";
-            document.querySelector('.container').style.boxShadow =
-                "0 0 10px rgba(0,0,0,0.2)";
+            containers.forEach(c => {
+                c.style.background = "rgba(255,255,255,0.8)";
+                c.style.boxShadow = "0 0 10px rgba(0,0,0,0.2)";
+            });
         } else {
             document.body.style.background = "black";
             document.body.style.color = "white";
-            document.querySelector('.container').style.background = "rgba(0,0,0,0.5)";
-            document.querySelector('.container').style.boxShadow =
-                "0 0 10px rgba(255,255,255,0.3)";
+            containers.forEach(c => {
+                c.style.background = "rgba(0,0,0,0.5)";
+                c.style.boxShadow = "0 0 10px rgba(255,255,255,0.3)";
+            });
         }
 
         // === 🦖 恐龍依 AZ 時針在卡片上不同位置 ===
-        // 12 個位置，模擬時鐘（百分比大概繞一圈）
         const positions = [
             { top: '5%',  left: '50%' }, // 0 -> 12 點
             { top: '15%', left: '80%' }, // 1 點
