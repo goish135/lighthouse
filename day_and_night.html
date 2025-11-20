@@ -44,7 +44,10 @@
             box-sizing: border-box;
             padding: 40px 40px 30px;
             backface-visibility: hidden;
-            transition: background 0.5s, box-shadow 0.5s, color 0.5s;
+            transition: background 0.5s, box-shadow 0.5s, color 0.5s, border-color 0.5s;
+            /* ✅ 預設邊框 + 陰影 */
+            border: 2px solid rgba(0, 0, 0, 0.15);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
         }
 
         /* 正面 */
@@ -101,122 +104,3 @@
                     TSMC Arizona Time
                 </a>:
                 <span id="arizona-datetime"></span>(GMT-7)
-            </p>
-
-            <p>
-                Taiwan Time:
-                <span id="taiwan-datetime"></span>
-            </p>
-        </div>
-
-        <!-- 背面 -->
-        <div class="card-face card-back">
-            ＰＹ突擊隊
-        </div>
-
-    </div>
-</div>
-
-<script>
-    // === 翻面控制 ===
-    const card = document.getElementById("card");
-    card.addEventListener("click", () => {
-        card.classList.toggle("flipped");
-    });
-
-    // === 時間 ＆ 恐龍 ===
-    const dinoEl = document.getElementById('dino');
-
-    function updateTime() {
-        const now = new Date();
-
-        const timeOptions = {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: true,
-            timeZoneName: 'short'
-        };
-
-        const dateOptions = {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            weekday: 'long'
-        };
-
-        // Arizona time
-        const arizona = new Date(
-            now.toLocaleString('en-US', { timeZone: 'America/Phoenix' })
-        );
-        const azHour = arizona.getHours();
-        const hour12 = azHour % 12;
-
-        const arizonaDate = now.toLocaleString('en-US', {
-            ...dateOptions,
-            timeZone: 'America/Phoenix'
-        });
-        const arizonaTime = now.toLocaleString('en-US', {
-            ...timeOptions,
-            timeZone: 'America/Phoenix'
-        });
-        const arizonaDateTime = `${arizonaDate} ${arizonaTime}`;
-
-        // Taiwan time
-        const taiwanDate = now.toLocaleString('en-US', {
-            ...dateOptions,
-            timeZone: 'Asia/Taipei'
-        });
-        const taiwanTime = now.toLocaleString('en-US', {
-            ...timeOptions,
-            timeZone: 'Asia/Taipei'
-        });
-        const taiwanDateTime = `${taiwanDate} ${taiwanTime}`;
-
-        document.getElementById('arizona-datetime').textContent = arizonaDateTime;
-        document.getElementById('taiwan-datetime').textContent = taiwanDateTime;
-
-        // === Day/Night mode ===
-        const isDay = azHour >= 6 && azHour < 18;
-        const front = document.getElementById("card-front");
-        const back = document.querySelector(".card-back");
-
-        if (isDay) {
-            document.body.style.background = "white";
-            document.body.style.color = "black";
-            front.style.background = "rgba(255,255,255,0.85)";
-            back.style.background = "rgba(255,255,255,0.9)";
-        } else {
-            document.body.style.background = "black";
-            document.body.style.color = "white";
-            front.style.background = "rgba(0,0,0,0.55)";
-            back.style.background = "rgba(0,0,0,0.55)";
-        }
-
-        // === 恐龍位置：根據 AZ 小時轉換成時鐘位置 ===
-        const positions = [
-            { top: '5%',  left: '50%' },
-            { top: '15%', left: '80%' },
-            { top: '30%', left: '93%' },
-            { top: '50%', left: '97%' },
-            { top: '70%', left: '93%' },
-            { top: '88%', left: '80%' },
-            { top: '95%', left: '50%' },
-            { top: '88%', left: '20%' },
-            { top: '70%', left: '7%'  },
-            { top: '50%', left: '3%'  },
-            { top: '30%', left: '7%'  },
-            { top: '15%', left: '20%' }
-        ];
-
-        const pos = positions[hour12];
-        dinoEl.style.top = pos.top;
-        dinoEl.style.left = pos.left;
-    }
-
-    updateTime();
-    setInterval(updateTime, 1000);
-</script>
-
-</body>
-</html>
