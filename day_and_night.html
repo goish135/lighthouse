@@ -14,7 +14,7 @@
             transition: background 0.5s, color 0.5s;
         }
 
-        /* 外層：提供 3D 視角、置中 */
+        /* 外層：提供 3D 視角 */
         .card-wrapper {
             perspective: 1200px;
             width: 80vw;
@@ -22,10 +22,10 @@
             min-width: 320px;
         }
 
-        /* 卡片本體：負責翻轉 */
+        /* 卡片本體 */
         .card {
             width: 100%;
-            min-height: 220px;
+            height: 260px;
             position: relative;
             transform-style: preserve-3d;
             transition: transform 0.6s;
@@ -36,41 +36,35 @@
             transform: rotateY(180deg);
         }
 
-        /* 卡片兩面共用樣式 */
+        /* 卡片兩面：統一尺寸 */
         .card-face {
             position: absolute;
+            width: 100%;
+            height: 100%;
             inset: 0;
             backface-visibility: hidden;
+            border-radius: 12px;
+            box-sizing: border-box;
+            padding: 40px 40px 30px;
+            transition: background 0.5s, box-shadow 0.5s;
         }
 
-        /* 正面 / 背面額外樣式 */
+        /* 正面 */
         .card-front {
-            /* 正面使用原本容器內容 */
+            position: absolute;
+            top: 0;
+            left: 0;
         }
 
+        /* 背面 */
         .card-back {
+            transform: rotateY(180deg);
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 36px;
             font-weight: bold;
             letter-spacing: 4px;
-            transform: rotateY(180deg);
-        }
-
-        /* 原本的 container，做為每一面的卡片外觀 */
-        .container {
-            position: relative; /* 讓恐龍可在卡片內絕對定位 */
-            padding: 40px 40px 30px;
-            border-radius: 10px;
-            transition: background 0.5s, box-shadow 0.5s;
-            min-width: 320px;
-            min-height: 220px;
-            box-sizing: border-box;
-        }
-
-        h1 {
-            margin: 0 0 20px 0;
         }
 
         /* 恐龍 icon */
@@ -78,8 +72,12 @@
             position: absolute;
             font-size: 40px;
             transform: translate(-50%, -50%);
-            transition: top 0.5s, left 0.5s, transform 0.5s;
-            pointer-events: none; /* 不擋到點擊 */
+            transition: top 0.5s, left 0.5s;
+            pointer-events: none;
+        }
+
+        h1 {
+            margin-top: 0;
         }
     </style>
 </head>
@@ -89,8 +87,9 @@
     <div class="card" id="card">
 
         <!-- 正面 -->
-        <div class="container card-face card-front">
-            <!-- 跑來跑去的恐龍 -->
+        <div class="card-face card-front" id="card-front">
+
+            <!-- 恐龍 -->
             <span id="dino" class="dino">🦖</span>
 
             <h1>Current Times</h1>
@@ -109,7 +108,7 @@
         </div>
 
         <!-- 背面 -->
-        <div class="container card-face card-back">
+        <div class="card-face card-back" id="card-back">
             PY 突擊隊
         </div>
 
@@ -118,12 +117,11 @@
 
 <script>
     // === 翻面控制 ===
-    const card = document.getElementById('card');
-    card.addEventListener('click', () => {
-        card.classList.toggle('flipped');
+    const card = document.getElementById("card");
+    card.addEventListener("click", () => {
+        card.classList.toggle("flipped");
     });
 
-    // === 時間 ＆ 恐龍 ===
     const dinoEl = document.getElementById('dino');
 
     function updateTime() {
@@ -144,14 +142,13 @@
             weekday: 'long'
         };
 
-        // Arizona Time（用時區轉換）
+        // Arizona 時區
         const arizona = new Date(
             now.toLocaleString('en-US', { timeZone: 'America/Phoenix' })
         );
-        const azHour = arizona.getHours();          // 0 ~ 23
-        const hour12 = azHour % 12;                 // 0 ~ 11，0 代表 12 點
+        const azHour = arizona.getHours();
+        const hour12 = azHour % 12;
 
-        // 用 now + timeZone 來格式化字串顯示
         const arizonaDate = now.toLocaleString('en-US', {
             ...dateOptions,
             timeZone: 'America/Phoenix'
@@ -160,9 +157,10 @@
             ...timeOptions,
             timeZone: 'America/Phoenix'
         });
-        const arizonaDateTime = `${arizonaDate} ${arizonaTime}`;
 
-        // Taiwan Time
+        document.getElementById('arizona-datetime').textContent =
+            `${arizonaDate} ${arizonaTime}`;
+
         const taiwanDate = now.toLocaleString('en-US', {
             ...dateOptions,
             timeZone: 'Asia/Taipei'
@@ -171,49 +169,44 @@
             ...timeOptions,
             timeZone: 'Asia/Taipei'
         });
-        const taiwanDateTime = `${taiwanDate} ${taiwanTime}`;
 
-        // Output
-        document.getElementById('arizona-datetime').textContent = arizonaDateTime;
-        document.getElementById('taiwan-datetime').textContent = taiwanDateTime;
+        document.getElementById('taiwan-datetime').textContent =
+            `${taiwanDate} ${taiwanTime}`;
 
-        // === 🌗 Background switch based on AZ time ===
-        const isDay = azHour >= 6 && azHour < 18; // 6 AM ~ 6 PM 視為白天
-        const containers = document.querySelectorAll('.container');
+        // === 背景切換 ===
+        const faces = document.querySelectorAll('.card-face');
+        const isDay = azHour >= 6 && azHour < 18;
 
-        if (isDay) {
-            document.body.style.background = "white";
-            document.body.style.color = "black";
-            containers.forEach(c => {
-                c.style.background = "rgba(255,255,255,0.8)";
-                c.style.boxShadow = "0 0 10px rgba(0,0,0,0.2)";
-            });
-        } else {
-            document.body.style.background = "black";
-            document.body.style.color = "white";
-            containers.forEach(c => {
-                c.style.background = "rgba(0,0,0,0.5)";
-                c.style.boxShadow = "0 0 10px rgba(255,255,255,0.3)";
-            });
-        }
+        faces.forEach(face => {
+            face.style.background = isDay
+                ? "rgba(255,255,255,0.85)"
+                : "rgba(0,0,0,0.55)";
 
-        // === 🦖 恐龍依 AZ 時針在卡片上不同位置 ===
+            face.style.boxShadow = isDay
+                ? "0 0 10px rgba(0,0,0,0.2)"
+                : "0 0 10px rgba(255,255,255,0.3)";
+        });
+
+        document.body.style.background = isDay ? "white" : "black";
+        document.body.style.color = isDay ? "black" : "white";
+
+        // === 恐龍移動 ===
         const positions = [
-            { top: '5%',  left: '50%' }, // 0 -> 12 點
-            { top: '15%', left: '80%' }, // 1 點
-            { top: '30%', left: '93%' }, // 2 點
-            { top: '50%', left: '97%' }, // 3 點
-            { top: '70%', left: '93%' }, // 4 點
-            { top: '88%', left: '80%' }, // 5 點
-            { top: '95%', left: '50%' }, // 6 點
-            { top: '88%', left: '20%' }, // 7 點
-            { top: '70%', left: '7%'  }, // 8 點
-            { top: '50%', left: '3%'  }, // 9 點
-            { top: '30%', left: '7%'  }, // 10 點
-            { top: '15%', left: '20%' }  // 11 點
+            { top: '5%',  left: '50%' },
+            { top: '15%', left: '80%' },
+            { top: '30%', left: '93%' },
+            { top: '50%', left: '97%' },
+            { top: '70%', left: '93%' },
+            { top: '88%', left: '80%' },
+            { top: '95%', left: '50%' },
+            { top: '88%', left: '20%' },
+            { top: '70%', left: '7%'  },
+            { top: '50%', left: '3%'  },
+            { top: '30%', left: '7%'  },
+            { top: '15%', left: '20%' }
         ];
 
-        const pos = positions[hour12]; // 0~11 對應上面的表
+        const pos = positions[hour12];
         dinoEl.style.top = pos.top;
         dinoEl.style.left = pos.left;
     }
