@@ -79,6 +79,13 @@
         h1 {
             margin-top: 0;
         }
+
+        /* ✅ 自動縮放的一行（TSMC Arizona 那行） */
+        .time-line {
+            color: green;
+            white-space: nowrap;    /* 不換行 */
+            margin: 0 0 12px 0;
+        }
     </style>
 </head>
 <body>
@@ -94,7 +101,8 @@
 
             <h1>Current Times</h1>
 
-            <p style="color: green;">
+            <!-- ✅ 這一行會自動縮小字體以塞一行 -->
+            <p class="time-line" id="az-line">
                 <a href="https://www.tsmc.com/static/abouttsmcaz/index.htm" style="color: inherit;">
                     TSMC Arizona Time
                 </a>:
@@ -123,6 +131,23 @@
     });
 
     const dinoEl = document.getElementById('dino');
+    const azLineEl = document.getElementById('az-line');
+
+    // ✅ 自動調整某一行字體大小，讓它剛好塞進一行
+    function autoFitLine(el, maxSize = 18, minSize = 10, step = 0.5) {
+        if (!el) return;
+        // 先設成最大
+        let size = maxSize;
+        el.style.fontSize = size + 'px';
+
+        const parentWidth = el.parentElement.clientWidth;
+
+        // 如果太寬就一直縮小
+        while (el.scrollWidth > parentWidth && size > minSize) {
+            size -= step;
+            el.style.fontSize = size + 'px';
+        }
+    }
 
     function updateTime() {
         const now = new Date();
@@ -159,7 +184,7 @@
         });
 
         document.getElementById('arizona-datetime').textContent =
-            `${arizonaDate} ${arizonaTime}`;
+            ` ${arizonaDate} ${arizonaTime} `;
 
         const taiwanDate = now.toLocaleString('en-US', {
             ...dateOptions,
@@ -209,6 +234,9 @@
         const pos = positions[hour12];
         dinoEl.style.top = pos.top;
         dinoEl.style.left = pos.left;
+
+        // ✅ 每次更新時間後，重新 fit 這一行
+        autoFitLine(azLineEl, 18, 10, 0.5);
     }
 
     updateTime();
