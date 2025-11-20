@@ -53,24 +53,24 @@
             font-size: 36px;
             font-weight: bold;
             letter-spacing: 4px;
+            cursor: pointer; /* 讓文字看起來可點擊 */
         }
 
-        /* ✨ 移除 pointer-events: none; 讓恐龍可點擊 */
         .dino {
             position: absolute;
             font-size: 40px;
             transform: translate(-50%, -50%);
             transition: top 0.5s, left 0.5s;
-            cursor: pointer; /* 讓恐龍看起來可點擊 */
+            cursor: pointer; /* 點恐龍翻面 */
         }
-
-        h1 { margin-top: 0; }
 
         .time-line {
             color: green;
             white-space: nowrap;
             margin: 0 0 12px 0;
         }
+
+        h1 { margin-top: 0; }
     </style>
 </head>
 <body>
@@ -97,9 +97,9 @@
             </p>
         </div>
 
-        <!-- 背面 -->
+        <!-- 背面（可點擊文字翻回正面） -->
         <div class="card-face card-back">
-            PY 突擊隊
+            <span id="py-back-text">PY 突擊隊</span>
         </div>
 
     </div>
@@ -108,15 +108,22 @@
 <script>
     const card = document.getElementById("card");
     const dinoEl = document.getElementById("dino");
+    const backTextEl = document.getElementById("py-back-text");
+    const azLineEl = document.getElementById("az-line");
 
-    /* ✅ 只有點擊恐龍才翻面 */
+    /* 正面：點恐龍翻面 */
     dinoEl.addEventListener("click", (event) => {
-        event.stopPropagation();  // 避免點恐龍被卡片接到事件
-        card.classList.toggle("flipped");
+        event.stopPropagation();
+        card.classList.add("flipped");
     });
 
-    const azLineEl = document.getElementById('az-line');
+    /* 背面：點“PY 突擊隊”翻回正面 */
+    backTextEl.addEventListener("click", (event) => {
+        event.stopPropagation();
+        card.classList.remove("flipped");
+    });
 
+    /* 自動字體縮小 */
     function autoFitLine(el, maxSize = 18, minSize = 10, step = 0.5) {
         let size = maxSize;
         el.style.fontSize = size + 'px';
@@ -139,7 +146,6 @@
             hour12: true,
             timeZoneName: 'short'
         };
-
         const dateOptions = {
             year: 'numeric',
             month: '2-digit',
@@ -147,18 +153,11 @@
             weekday: 'long'
         };
 
-        const arizona = new Date(
-            now.toLocaleString('en-US', { timeZone: 'America/Phoenix' })
-        );
-        const azHour = arizona.getHours();
-        const hour12 = azHour % 12;
-
         const arizonaString = now.toLocaleString('en-US', {
             ...dateOptions,
             ...timeOptions,
             timeZone: 'America/Phoenix'
         });
-
         document.getElementById('arizona-datetime').textContent = arizonaString;
 
         const taiwanString = now.toLocaleString('en-US', {
@@ -166,26 +165,27 @@
             ...timeOptions,
             timeZone: 'Asia/Taipei'
         });
-
         document.getElementById('taiwan-datetime').textContent = taiwanString;
+
+        const arizonaHour = new Date(
+            now.toLocaleString('en-US', { timeZone: 'America/Phoenix' })
+        ).getHours();
 
         /* 背景切換 */
         const faces = document.querySelectorAll('.card-face');
-        const isDay = azHour >= 6 && azHour < 18;
+        const isDay = arizonaHour >= 6 && arizonaHour < 18;
 
         faces.forEach(face => {
-            face.style.background = isDay
-                ? "rgba(255,255,255,0.85)"
-                : "rgba(0,0,0,0.55)";
+            face.style.background = isDay ? "rgba(255,255,255,0.85)" : "rgba(0,0,0,0.55)";
             face.style.boxShadow = isDay
                 ? "0 0 10px rgba(0,0,0,0.2)"
                 : "0 0 10px rgba(255,255,255,0.3)";
         });
-
         document.body.style.background = isDay ? "white" : "black";
         document.body.style.color = isDay ? "black" : "white";
 
-        /* 恐龍 12 點位置移動 */
+        /* 恐龍位置 */
+        const hour12 = arizonaHour % 12;
         const positions = [
             { top: '5%', left: '50%' },
             { top: '15%', left: '80%' },
@@ -200,12 +200,10 @@
             { top: '30%', left: '7%'  },
             { top: '15%', left: '20%' }
         ];
-
         const pos = positions[hour12];
         dinoEl.style.top = pos.top;
         dinoEl.style.left = pos.left;
 
-        /* 自動字體縮放 */
         autoFitLine(azLineEl, 18, 10, 0.5);
     }
 
