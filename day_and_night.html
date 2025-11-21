@@ -16,8 +16,8 @@
 
         .card-wrapper {
            perspective: 1200px;
-           width: 90vw;
-           max-width: 800px;
+           width: 90vw;      /* ← 改成 90% 視窗寬度 */
+           max-width: 800px; /* ← 可更長，原本是 520px */
            min-width: 320px;
         }
 
@@ -53,7 +53,7 @@
             font-size: 36px;
             font-weight: bold;
             letter-spacing: 4px;
-            cursor: pointer;
+            cursor: pointer; /* 讓文字看起來可點擊 */
         }
 
         .dino {
@@ -61,7 +61,7 @@
             font-size: 40px;
             transform: translate(-50%, -50%);
             transition: top 0.5s, left 0.5s;
-            cursor: pointer;
+            cursor: pointer; /* 點恐龍翻面 */
         }
 
         .time-line {
@@ -97,7 +97,7 @@
             </p>
         </div>
 
-        <!-- 背面 -->
+        <!-- 背面（可點擊文字翻回正面） -->
         <div class="card-face card-back">
             <span id="py-back-text">PY 突擊隊</span>
         </div>
@@ -127,6 +127,7 @@
     function autoFitLine(el, maxSize = 18, minSize = 10, step = 0.5) {
         let size = maxSize;
         el.style.fontSize = size + 'px';
+
         const parentWidth = el.parentElement.clientWidth;
 
         while (el.scrollWidth > parentWidth && size > minSize) {
@@ -145,7 +146,6 @@
             hour12: true,
             timeZoneName: 'short'
         };
-
         const dateOptions = {
             year: 'numeric',
             month: '2-digit',
@@ -171,37 +171,18 @@
             now.toLocaleString('en-US', { timeZone: 'America/Phoenix' })
         ).getHours();
 
-        /* 背景亮度：清晨 → 白天 → 傍晚 → 夜晚 漸變 */
-        let progress = 0;
-
-        if (arizonaHour >= 6 && arizonaHour < 12) {
-            progress = (arizonaHour - 6) / 6; // 6 → 12 由暗變亮
-        } else if (arizonaHour >= 12 && arizonaHour < 18) {
-            progress = (18 - arizonaHour) / 6; // 12 → 18 由亮變暗
-        } else {
-            progress = 0; // 夜晚保持最暗
-        }
-
-        const minBg = 20;   // 最暗不全黑
-        const maxBg = 255;  // 最亮接近白
-        const value = Math.round(minBg + (maxBg - minBg) * progress);
-
-        /* 設定 body 背景 */
-        document.body.style.background = `rgb(${value}, ${value}, ${value})`;
-        document.body.style.color = value > 140 ? "black" : "white";
-
-        /* 卡片背景也跟亮暗調整 */
+        /* 背景切換 */
         const faces = document.querySelectorAll('.card-face');
-        const isBright = value > 140;
+        const isDay = arizonaHour >= 6 && arizonaHour < 18;
 
         faces.forEach(face => {
-            face.style.background = isBright
-                ? "rgba(255,255,255,0.85)"
-                : "rgba(0,0,0,0.55)";
-            face.style.boxShadow = isBright
+            face.style.background = isDay ? "rgba(255,255,255,0.85)" : "rgba(0,0,0,0.55)";
+            face.style.boxShadow = isDay
                 ? "0 0 10px rgba(0,0,0,0.2)"
                 : "0 0 10px rgba(255,255,255,0.3)";
         });
+        document.body.style.background = isDay ? "white" : "black";
+        document.body.style.color = isDay ? "black" : "white";
 
         /* 恐龍位置 */
         const hour12 = arizonaHour % 12;
@@ -219,7 +200,6 @@
             { top: '30%', left: '7%'  },
             { top: '15%', left: '20%' }
         ];
-
         const pos = positions[hour12];
         dinoEl.style.top = pos.top;
         dinoEl.style.left = pos.left;
