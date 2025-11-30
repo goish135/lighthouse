@@ -11,7 +11,23 @@
             margin: 0;
             font-family: Arial, sans-serif;
             text-align: center;
-            transition: background 0.5s, color 0.5s;
+            transition: color 0.5s;
+        }
+
+        /* ★ 背景漸進層（白天 / 夜晚） */
+        .bg-layer {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            transition: opacity 1.5s ease; /* 漸變時間 */
+        }
+        #day-bg {
+            background: white;
+            opacity: 1;
+        }
+        #night-bg {
+            background: black;
+            opacity: 0;
         }
 
         .card-wrapper {
@@ -79,6 +95,10 @@
     </style>
 </head>
 <body>
+
+<!-- ★ 背景漸層層 -->
+<div id="day-bg" class="bg-layer"></div>
+<div id="night-bg" class="bg-layer"></div>
 
 <div class="card-wrapper">
     <div class="card" id="card">
@@ -169,9 +189,9 @@
             now.toLocaleString('en-US', { timeZone: 'America/Phoenix' })
         );
         const arizonaHour = arizonaDate.getHours();
-        const day = arizonaDate.getDay(); // 0=Sunday, 6=Saturday
+        const day = arizonaDate.getDay(); // 0=Sun, 6=Sat
 
-        /* ★ 狀態文字含顏色 */
+        /* ★ 狀態顯示含顏色 */
         let statusHTML = "";
 
         if (day === 0 || day === 6) {
@@ -193,18 +213,22 @@
         });
         document.getElementById('taiwan-datetime').textContent = taiwanString;
 
-        /* 日夜背景切換（依 AZ 時間） */
-        const faces = document.querySelectorAll('.card-face');
+        /* ★ 背景漸進切換 */
         const isDay = arizonaHour >= 6 && arizonaHour < 18;
+        document.getElementById("day-bg").style.opacity = isDay ? "1" : "0";
+        document.getElementById("night-bg").style.opacity = isDay ? "0" : "1";
 
+        /* 文字顏色維持切換 */
+        document.body.style.color = isDay ? "black" : "white";
+
+        /* 卡片前後背景 */
+        const faces = document.querySelectorAll('.card-face');
         faces.forEach(face => {
             face.style.background = isDay ? "rgba(255,255,255,0.85)" : "rgba(0,0,0,0.55)";
             face.style.boxShadow = isDay
                 ? "0 0 10px rgba(0,0,0,0.2)"
                 : "0 0 10px rgba(255,255,255,0.3)";
         });
-        document.body.style.background = isDay ? "white" : "black";
-        document.body.style.color = isDay ? "black" : "white";
 
         /* 恐龍時鐘位置 */
         const hour12 = arizonaHour % 12;
