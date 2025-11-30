@@ -16,8 +16,8 @@
 
         .card-wrapper {
            perspective: 1200px;
-           width: 90vw;      /* ← 改成 90% 視窗寬度 */
-           max-width: 800px; /* ← 可更長，原本是 520px */
+           width: 90vw;
+           max-width: 800px;
            min-width: 320px;
         }
 
@@ -53,7 +53,7 @@
             font-size: 36px;
             font-weight: bold;
             letter-spacing: 4px;
-            cursor: pointer; /* 讓文字看起來可點擊 */
+            cursor: pointer;
         }
 
         .dino {
@@ -61,7 +61,7 @@
             font-size: 40px;
             transform: translate(-50%, -50%);
             transition: top 0.5s, left 0.5s;
-            cursor: pointer; /* 點恐龍翻面 */
+            cursor: pointer;
         }
 
         .time-line {
@@ -97,7 +97,7 @@
             </p>
         </div>
 
-        <!-- 背面（可點擊文字翻回正面） -->
+        <!-- 背面 -->
         <div class="card-face card-back">
             <span id="py-back-text">PY 突擊隊</span>
         </div>
@@ -111,19 +111,19 @@
     const backTextEl = document.getElementById("py-back-text");
     const azLineEl = document.getElementById("az-line");
 
-    /* 正面：點恐龍翻面 */
+    /* 點恐龍翻面 */
     dinoEl.addEventListener("click", (event) => {
         event.stopPropagation();
         card.classList.add("flipped");
     });
 
-    /* 背面：點“PY 突擊隊”翻回正面 */
+    /* 點背面文字翻回來 */
     backTextEl.addEventListener("click", (event) => {
         event.stopPropagation();
         card.classList.remove("flipped");
     });
 
-    /* 自動字體縮小 */
+    /* 自動縮字 */
     function autoFitLine(el, maxSize = 18, minSize = 10, step = 0.5) {
         let size = maxSize;
         el.style.fontSize = size + 'px';
@@ -153,13 +153,30 @@
             weekday: 'long'
         };
 
+        /* Arizona Time */
         const arizonaString = now.toLocaleString('en-US', {
             ...dateOptions,
             ...timeOptions,
             timeZone: 'America/Phoenix'
         });
-        document.getElementById('arizona-datetime').textContent = arizonaString;
 
+        const arizonaDate = new Date(
+            now.toLocaleString('en-US', { timeZone: 'America/Phoenix' })
+        );
+        const arizonaHour = arizonaDate.getHours();
+
+        /* 上班 08:00–17:00 → (in fab)；其他 → (off) */
+        let statusText = "";
+        if (arizonaHour >= 8 && arizonaHour < 17) {
+            statusText = " (in fab)";
+        } else {
+            statusText = " (off)";
+        }
+
+        document.getElementById('arizona-datetime').textContent =
+            arizonaString + statusText;
+
+        /* Taiwan Time */
         const taiwanString = now.toLocaleString('en-US', {
             ...dateOptions,
             ...timeOptions,
@@ -167,11 +184,7 @@
         });
         document.getElementById('taiwan-datetime').textContent = taiwanString;
 
-        const arizonaHour = new Date(
-            now.toLocaleString('en-US', { timeZone: 'America/Phoenix' })
-        ).getHours();
-
-        /* 背景切換 */
+        /* 日夜背景切換（依 AZ 小時） */
         const faces = document.querySelectorAll('.card-face');
         const isDay = arizonaHour >= 6 && arizonaHour < 18;
 
@@ -184,7 +197,7 @@
         document.body.style.background = isDay ? "white" : "black";
         document.body.style.color = isDay ? "black" : "white";
 
-        /* 恐龍位置 */
+        /* 恐龍時鐘位置 */
         const hour12 = arizonaHour % 12;
         const positions = [
             { top: '5%', left: '50%' },
