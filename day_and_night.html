@@ -70,6 +70,11 @@
             margin: 0 0 12px 0;
         }
 
+        /* 狀態顏色 */
+        .status-fab { color: #27ae60; font-weight: bold; }
+        .status-off { color: #e74c3c; font-weight: bold; }
+        .status-vac { color: #f1c40f; font-weight: bold; }
+
         h1 { margin-top: 0; }
     </style>
 </head>
@@ -164,17 +169,21 @@
             now.toLocaleString('en-US', { timeZone: 'America/Phoenix' })
         );
         const arizonaHour = arizonaDate.getHours();
+        const day = arizonaDate.getDay(); // 0=Sunday, 6=Saturday
 
-        /* 上班 08:00–17:00 → (in fab)；其他 → (off) */
-        let statusText = "";
-        if (arizonaHour >= 8 && arizonaHour < 17) {
-            statusText = " (in fab)";
+        /* ★ 狀態文字含顏色 */
+        let statusHTML = "";
+
+        if (day === 0 || day === 6) {
+            statusHTML = ` <span class="status-vac">(vacation)</span>`;
+        } else if (arizonaHour >= 8 && arizonaHour < 17) {
+            statusHTML = ` <span class="status-fab">(in fab)</span>`;
         } else {
-            statusText = " (off)";
+            statusHTML = ` <span class="status-off">(off)</span>`;
         }
 
-        document.getElementById('arizona-datetime').textContent =
-            arizonaString + statusText;
+        document.getElementById('arizona-datetime').innerHTML =
+            arizonaString + statusHTML;
 
         /* Taiwan Time */
         const taiwanString = now.toLocaleString('en-US', {
@@ -184,7 +193,7 @@
         });
         document.getElementById('taiwan-datetime').textContent = taiwanString;
 
-        /* 日夜背景切換（依 AZ 小時） */
+        /* 日夜背景切換（依 AZ 時間） */
         const faces = document.querySelectorAll('.card-face');
         const isDay = arizonaHour >= 6 && arizonaHour < 18;
 
