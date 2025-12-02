@@ -3,7 +3,14 @@
 <head>
     <title>AZ vs TW</title>
     <link rel="icon" href="favicon.ico">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <style>
+        :root{
+            --trail-stroke: rgba(255,255,255,0.22);
+            --trail-fill: rgba(255,255,255,0.15);
+        }
+
         body {
             display: flex;
             justify-content: center;
@@ -13,13 +20,15 @@
             font-family: Arial, sans-serif;
             text-align: center;
             transition: color 0.5s;
+            position: relative;
+            overflow: hidden;
         }
 
         /* ★ 背景漸進層（白天 / 夜晚） */
         .bg-layer {
             position: fixed;
             inset: 0;
-            z-index: -1;
+            z-index: -3; /* 最底層 */
             transition: opacity 1.5s ease; /* 漸變時間 */
         }
         #day-bg {
@@ -31,6 +40,34 @@
             opacity: 0;
         }
 
+        /* ===== 淡淡恐龍軌跡 =====
+           放在 bg-layer 之上，但仍在內容後面（z-index: -2）
+        */
+        .dino-trail {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            pointer-events: none;
+            opacity: 0.45; /* 可調整整體淡度 */
+            transition: opacity 0.8s ease;
+        }
+        .dino-trail svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        .dino-trail-path {
+            fill: none;
+            stroke: var(--trail-stroke);
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-dasharray: 10 14;
+        }
+        .dino-footprint {
+            fill: var(--trail-fill);
+        }
+
+        /* card & layout */
         .card-wrapper {
            perspective: 1200px;
            width: 90vw;
@@ -79,6 +116,7 @@
             transform: translate(-50%, -50%);
             transition: top 0.5s, left 0.5s;
             cursor: pointer;
+            user-select: none;
         }
 
         .time-line {
@@ -93,13 +131,42 @@
         .status-vac { color: #f1c40f; font-weight: bold; }
 
         h1 { margin-top: 0; }
+
+        /* 小螢幕微調（避免腳印太靠近內容） */
+        @media (max-width: 480px) {
+            .dino-trail { opacity: 0.28; }
+            .dino-trail-path { stroke-width: 3; stroke-dasharray: 8 12; }
+        }
     </style>
 </head>
 <body>
 
-<!-- ★ 背景漸層層 -->
+<!-- ★ 背景漸層層（最底） -->
 <div id="day-bg" class="bg-layer"></div>
 <div id="night-bg" class="bg-layer"></div>
+
+<!-- ★ 恐龍軌跡背景（淺色） -->
+<div class="dino-trail" aria-hidden="true">
+    <svg viewBox="0 0 1200 600" preserveAspectRatio="none" role="img" focusable="false">
+        <!-- 主軌跡（平滑曲線） -->
+        <path class="dino-trail-path"
+              d="M -120 520
+                 Q 80 480 240 430
+                 T 520 360 760 320
+                 T 1000 280 1320 230" />
+        <!-- 零星腳印（位置約略對齊曲線） -->
+        <circle class="dino-footprint" cx="40"  cy="505" r="6" />
+        <circle class="dino-footprint" cx="150" cy="475" r="5" />
+        <circle class="dino-footprint" cx="250" cy="450" r="6" />
+        <circle class="dino-footprint" cx="360" cy="420" r="5" />
+        <circle class="dino-footprint" cx="480" cy="385" r="6" />
+        <circle class="dino-footprint" cx="620" cy="355" r="5" />
+        <circle class="dino-footprint" cx="740" cy="330" r="6" />
+        <circle class="dino-footprint" cx="880" cy="300" r="5" />
+        <circle class="dino-footprint" cx="1000" cy="275" r="6" />
+        <circle class="dino-footprint" cx="1140" cy="245" r="5" />
+    </svg>
+</div>
 
 <div class="card-wrapper">
     <div class="card" id="card">
@@ -137,6 +204,7 @@
     const dinoEl = document.getElementById("dino");
     const backTextEl = document.getElementById("py-back-text");
     const azLineEl = document.getElementById("az-line");
+    const dinoTrailEl = document.querySelector('.dino-trail');
 
     /* 點恐龍翻面 */
     dinoEl.addEventListener("click", (event) => {
@@ -251,6 +319,17 @@
         const pos = positions[hour12];
         dinoEl.style.top = pos.top;
         dinoEl.style.left = pos.left;
+
+        /* 調整恐龍軌跡顏色（使用 CSS 變數）*/
+        if (isDay) {
+            document.documentElement.style.setProperty('--trail-stroke', 'rgba(0,0,0,0.08)');
+            document.documentElement.style.setProperty('--trail-fill', 'rgba(0,0,0,0.06)');
+            dinoTrailEl.style.opacity = 0.36; /* 日間更淡 */
+        } else {
+            document.documentElement.style.setProperty('--trail-stroke', 'rgba(255,255,255,0.22)');
+            document.documentElement.style.setProperty('--trail-fill', 'rgba(255,255,255,0.15)');
+            dinoTrailEl.style.opacity = 0.5; /* 夜間稍微明顯 */
+        }
 
         autoFitLine(azLineEl, 18, 10, 0.5);
     }
