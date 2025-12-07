@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>命運轉盤 — 雙打 / 單打 名單產生器（動畫版）</title>
+  <style>
+    body{font-family: system-ui, -apple-system; padding:18px; background:#fafafa; color:#111}
+    .card{background:#fff;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06);padding:16px;max-width:900px;margin:8px auto}
+    textarea{width:100%;height:140px;padding:10px;border-radius:8px;border:1px solid #ddd;resize:vertical}
+    label{display:block;margin:6px 0;font-weight:600}
+    input[type=number]{width:120px;padding:8px;border-radius:8px;border:1px solid #ddd}
+    button{padding:8px 12px;border-radius:8px;border:0;background:#0b74ff;color:#fff;cursor:pointer}
+    button.secondary{background:#6b7280}
+    #wheelContainer{display:flex;flex-direction:column;align-items:center;justify-content:center;margin-top:20px}
+    #wheel{width:360px;height:360px;border-radius:50%;border:6px solid #333;position:relative;overflow:hidden;transition:transform 4s cubic-bezier(.17,.67,.32,1.27);}
+    .slice{position:absolute;top:0;left:0;width:100%;height:100%;transform-origin:center;clip-path:polygon(50% 50%, 100% 0, 0 0);display:flex;justify-content:center;align-items:flex-start;font-size:14px;font-weight:600;color:#fff;padding-top:20px;text-shadow:0 1px 3px #0009}
+    .pointer{width:0;height:0;border-left:18px solid transparent;border-right:18px solid transparent;border-bottom:28px solid #e11d48;margin-bottom:12px}
+    .result-box{margin-top:20px;padding:12px;background:#f8fafc;border-radius:8px;}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>命運轉盤 — 雙打 / 單打 名單產生器（動畫版）</h2>
+
+    <label>名單 (每行一個名字)</label>
+    <textarea id="names" placeholder="小明\n小華\n小美\n阿強"></textarea>
+
+    <label>雙打隊數（可留空）</label>
+    <input id="pairCount" type="number" min="0" placeholder="例如 3" />
+    <br><br>
+    <button id="run">準備配對</button>
+    <button id="spin" class="secondary">轉動轉盤</button>
+
+    <div id="wheelContainer">
+      <div class="pointer"></div>
+    </div>
+
+    <div class="result-box" id="out"></div>
+  </div>
+
+  <script>
+    // Fisher-Yates shuffle
+    function shuffle(a){
+      const arr = a.slice();
+      let m = arr.length, t, i;
+      while(m){
+        i = Math.floor(Math.random() * m--);
+        t = arr[m]; arr[m] = arr[i]; arr[i] = t;
+      }
+      return arr;
+    }
+
+    // 換行分割支援 Windows/Unix
+    function parseNames(t){
+      return String(t).split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+    }
+
+    let finalList = [];
+    let drawnList = [];
+    let wheel = null;
+
+    function buildWheel(list){
+      const container = document.getElementById('wheelContainer');
+      const existing = document.getElementById('wheel');
+      if(existing) existing.remove();
+
+      wheel = document.createElement('div');
+      wheel.id = 'wheel';
+      container.appendChild(wheel);
+
+      const count = list.length;
+      if(count === 0) return;
+      const angle = 360 / count;
+
+      list.forEach((name, i)=>{
+        const slice = document.createElement('div');
+        slice.className = 'slice';
+        slice.style.transform = `rotate(${i * angle}deg)`;
+        slice.style.background = `hsl(${i*angle}, 75%, 45%)`;
+        const label = document.createElement('div');
+        label.textContent = name;
+        label.style.transform = `rotate(${angle/2}deg)`;
+        label.style.maxWidth = '40%';
+        label.style.textAlign = 'center';
+        slice.appendChild(label);
+        wheel.appendChild(slice);
+      });
+    }
+
+    function makePairs(list, pairCount){
+      const n = list.length;
+      const maxPairs = Math.floor(n/2);
+      if(!pairCount || pairCount <= 0) pairCount = maxPairs;
+      pairCount = Math.min(maxPairs, pairCount);
+
+      const arr = shuffle(list);
+      const pairs = [];
+      let idx = 0;
+      for(let i=0;i<pairCount;i++) pairs.push([arr[idx++], arr[idx++]]);
+      const singles = arr.slice(idx);
+      return {pairs,singles};
+    }
+
+    document.getElementById('run').onclick = ()=>{
+      const names = parseNames(document.getElementById('names').value);
+      if(!names.length){alert('請輸入名單');return;}
+      finalList = names;
+      drawnList = [];
+      buildWheel(names);
+      document.getElementById('out').innerHTML = '轉盤已建立，按「轉動轉盤」開始抽人！<br><br><b>預覽名單：</b><br>' + names.join('<br>');
+    };
+
+    document.getElementById('spin').onclick = ()=>{
+      if(!finalList.length){alert('請先按「準備配對」');return;}
+      if(!wheel){alert('轉盤尚未建立，請先按「準備配對」');return;}
+
+      const total = finalList.length;
+      if(total === 0){alert('名單為空');return;}
+
+      const extraRot = Math.random() * 360;
+      const rounds = 1080;
+      const rand = rounds + extraRot;
+      wheel.style.transform = `rotate(${rand}deg)`;
+
+      setTimeout(()=>{
+        const chosenAngle = extraRot % 360;
+        const anglePer = 360 / total;
+        const index = Math.floor((360 - chosenAngle) / anglePer) % total;
+        const chosen = finalList[(index + total) % total];
+
+        finalList.splice((index + total) % total, 1);
+        drawnList.push(chosen);
+
+        document.getElementById('out').innerHTML = `<b>抽到：</b> ${chosen}<br>剩餘：${finalList.join(', ') || '無'}`;
+
+        if(finalList.length === 0){
+          const pairCount = Number(document.getElementById('pairCount').value);
+          const result = makePairs(drawnList, pairCount);
+          let html = `<br><hr><b>所有抽籤完成！</b><br><br><b>雙打配對：</b><br>`;
+          result.pairs.forEach((p,i)=>{html += `${i+1}. ${p[0]} & ${p[1]}<br>`});
+          html += `<br><b>單打：</b><br>${result.singles.join('<br>') || '無'}`;
+          document.getElementById('out').innerHTML += html;
+        }
+      }, 4200);
+    };
+  </script>
+</body>
+</html>
