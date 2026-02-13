@@ -1,2 +1,2 @@
 # lighthouse
-## html,cs,javascript
+## html,css,javascript
