@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Club Activity Platform</title>
+
+<style>
+/* =======================
+   GLOBAL
+======================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+  background: #0f172a;
+  color: white;
+  transition: all 0.4s ease;
+}
+
+/* =======================
+   NAVBAR
+======================= */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 60px;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px);
+  position: fixed;
+  width: 100%;
+  z-index: 100;
+}
+
+.nav-links {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.lang-switch {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+/* =======================
+   HERO
+======================= */
+.hero {
+  height: 70vh;
+  background: url('https://images.unsplash.com/photo-1517649763962-0c623066013b') center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+.hero h1 {
+  font-size: 42px;
+  margin-bottom: 15px;
+}
+
+.hero p {
+  font-size: 18px;
+  opacity: 0.8;
+}
+
+/* =======================
+   EVENTS
+======================= */
+.events {
+  padding: 60px;
+}
+
+.events h2 {
+  margin-bottom: 30px;
+}
+
+.cards {
+  display: flex;
+  gap: 20px;
+}
+
+.card {
+  background: rgba(255,255,255,0.08);
+  padding: 20px;
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  flex: 1;
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  background: rgba(255,255,255,0.15);
+}
+
+.card button {
+  margin-top: 15px;
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: #f59e0b;
+  color: black;
+  font-weight: bold;
+}
+
+/* =======================
+   STYLE SWITCHER
+======================= */
+.style-switcher {
+  position: fixed;
+  right: 20px;
+  top: 120px;
+  background: rgba(0,0,0,0.6);
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.style-switcher h4 {
+  margin-bottom: 10px;
+}
+
+.style-option {
+  padding: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.style-option:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+/* =======================
+   FOOTER
+======================= */
+footer {
+  text-align: center;
+  padding: 30px;
+  opacity: 0.5;
+}
+
+/* =======================
+   THEMES
+======================= */
+
+.theme-luxury {
+  background: #0f172a;
+}
+
+.theme-wild {
+  background: linear-gradient(135deg, #7f1d1d, #1e3a8a);
+}
+
+.theme-warm {
+  background: linear-gradient(135deg, #78350f, #ea580c);
+}
+
+.theme-slow {
+  background: #1e293b;
+}
+
+.theme-soft {
+  background: #fbcfe8;
+  color: #111;
+}
+
+</style>
+</head>
+
+<body class="theme-luxury">
+
+<!-- NAVBAR -->
+<div class="navbar">
+  <div><strong>Club Activity Platform</strong></div>
+  <div class="nav-links">
+    <a>Home</a>
+    <a>Events</a>
+    <a>Clubs</a>
+    <a>Login</a>
+
+    <select class="lang-switch" onchange="switchLang(this.value)">
+      <option value="en">EN</option>
+      <option value="zh">中文</option>
+    </select>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <h1 id="heroTitle">Explore Exciting Club Activities</h1>
+    <p id="heroDesc">Sign up for activities you love and expand your social circle</p>
+  </div>
+</section>
+
+<!-- EVENTS -->
+<section class="events">
+  <h2 id="latestEvents">Latest Events</h2>
+
+  <div class="cards">
+    <div class="card">
+      <h3 id="event1">Mountain Hiking Challenge</h3>
+      <p>2026/03/10 · 30 participants</p>
+      <button id="btn1">Sign Up Now</button>
+    </div>
+
+    <div class="card">
+      <h3 id="event2">Photography Night Tutorial</h3>
+      <p>2026/03/15 · 20 participants</p>
+      <button id="btn2">Sign Up Now</button>
+    </div>
+
+    <div class="card">
+      <h3 id="event3">Programming Workshop</h3>
+      <p>2026/03/20 · 50 participants</p>
+      <button id="btn3">Sign Up Now</button>
+    </div>
+  </div>
+</section>
+
+<!-- STYLE SWITCHER -->
+<div class="style-switcher">
+  <h4>Style Switcher</h4>
+  <div class="style-option" onclick="setTheme('luxury')">Low-key Luxury</div>
+  <div class="style-option" onclick="setTheme('wild')">Wild & Passionate</div>
+  <div class="style-option" onclick="setTheme('warm')">Warm & Cozy</div>
+  <div class="style-option" onclick="setTheme('slow')">Slow-paced</div>
+  <div class="style-option" onclick="setTheme('soft')">Gentle & Soft</div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  © 2026 Club Activity Platform
+</footer>
+
+<script>
+
+/* =======================
+   LANGUAGE SWITCH
+======================= */
+function switchLang(lang) {
+  if(lang === "zh") {
+    document.getElementById("heroTitle").innerText = "探索精彩社團活動";
+    document.getElementById("heroDesc").innerText = "報名你喜愛的活動，擴展你的社交圈";
+    document.getElementById("latestEvents").innerText = "最新活動";
+    document.getElementById("btn1").innerText = "立即報名";
+    document.getElementById("btn2").innerText = "立即報名";
+    document.getElementById("btn3").innerText = "立即報名";
+  } else {
+    document.getElementById("heroTitle").innerText = "Explore Exciting Club Activities";
+    document.getElementById("heroDesc").innerText = "Sign up for activities you love and expand your social circle";
+    document.getElementById("latestEvents").innerText = "Latest Events";
+    document.getElementById("btn1").innerText = "Sign Up Now";
+    document.getElementById("btn2").innerText = "Sign Up Now";
+    document.getElementById("btn3").innerText = "Sign Up Now";
+  }
+}
+
+/* =======================
+   THEME SWITCH
+======================= */
+function setTheme(theme) {
+  document.body.className = "";
+
+  switch(theme) {
+    case "luxury":
+      document.body.classList.add("theme-luxury");
+      break;
+    case "wild":
+      document.body.classList.add("theme-wild");
+      break;
+    case "warm":
+      document.body.classList.add("theme-warm");
+      break;
+    case "slow":
+      document.body.classList.add("theme-slow");
+      break;
+    case "soft":
+      document.body.classList.add("theme-soft");
+      break;
+  }
+}
+
+</script>
+
+</body>
+</html>
