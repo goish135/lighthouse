@@ -1,127 +1,130 @@
 <!doctype html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Fortune Wheel</title>
-  <link rel="icon" href="favicon.ico">
-  <style>
-    body{
-      font-family: system-ui, -apple-system;
-      padding:18px;
-      background:#fafafa;
-      color:#111
-    }
-    .card{
-      background:#fff;
-      border-radius:12px;
-      box-shadow:0 6px 18px rgba(0,0,0,0.06);
-      padding:16px;
-      max-width:900px;
-      margin:8px auto
-    }
-    textarea{
-      width:100%;
-      height:140px;
-      padding:10px;
-      border-radius:8px;
-      border:1px solid #ddd;
-      resize:vertical
-    }
-    label{
-      display:block;
-      margin:6px 0;
-      font-weight:600
-    }
-    input[type=number]{
-      width:120px;
-      padding:8px;
-      border-radius:8px;
-      border:1px solid #ddd
-    }
-    button{
-      padding:8px 12px;
-      border-radius:8px;
-      border:0;
-      background:#0b74ff;
-      color:#fff;
-      cursor:pointer;
-      margin-right:6px
-    }
-    button.secondary{
-      background:#6b7280
-    }
-    #wheelContainer{
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      margin-top:20px
-    }
-    #wheel{
-      width:360px;
-      height:360px;
-      border-radius:50%;
-      border:6px solid #333;
-      position:relative;
-      overflow:hidden;
-      transition:transform 4s cubic-bezier(.17,.67,.32,1.27);
-    }
-    .slice{
-      position:absolute;
-      top:0;
-      left:0;
-      width:100%;
-      height:100%;
-      transform-origin:center;
-      clip-path:polygon(50% 50%, 100% 0, 0 0);
-      display:flex;
-      justify-content:center;
-      align-items:flex-start;
-      font-size:14px;
-      font-weight:600;
-      color:#fff;
-      padding-top:20px;
-      text-shadow:0 1px 3px #0009
-    }
-    .pointer{
-      width:0;
-      height:0;
-      border-left:18px solid transparent;
-      border-right:18px solid transparent;
-      border-bottom:28px solid #e11d48;
-      margin-bottom:12px
-    }
-    .result-box{
-      margin-top:20px;
-      padding:12px;
-      background:#f8fafc;
-      border-radius:8px;
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Fortune Wheel</title>
+<link rel="icon" href="favicon.ico">
+<style>
+body{
+  font-family: system-ui, -apple-system;
+  padding:18px;
+  background:#fafafa;
+  color:#111
+}
+.card{
+  background:#fff;
+  border-radius:12px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.06);
+  padding:16px;
+  max-width:900px;
+  margin:8px auto
+}
+textarea{
+  width:100%;
+  height:140px;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #ddd;
+  resize:vertical
+}
+label{
+  display:block;
+  margin:6px 0;
+  font-weight:600
+}
+input[type=number]{
+  width:120px;
+  padding:8px;
+  border-radius:8px;
+  border:1px solid #ddd
+}
+button{
+  padding:8px 12px;
+  border-radius:8px;
+  border:0;
+  background:#0b74ff;
+  color:#fff;
+  cursor:pointer;
+  margin-right:6px;
+  margin-bottom:6px
+}
+button.secondary{
+  background:#6b7280
+}
+#wheelContainer{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  margin-top:20px
+}
+#wheel{
+  width:360px;
+  height:360px;
+  border-radius:50%;
+  border:6px solid #333;
+  position:relative;
+  overflow:hidden;
+  transition:transform 4s cubic-bezier(.17,.67,.32,1.27);
+}
+.slice{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  transform-origin:center;
+  clip-path:polygon(50% 50%, 100% 0, 0 0);
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  font-size:14px;
+  font-weight:600;
+  color:#fff;
+  padding-top:20px;
+  text-shadow:0 1px 3px #0009
+}
+.pointer{
+  width:0;
+  height:0;
+  border-left:18px solid transparent;
+  border-right:18px solid transparent;
+  border-bottom:28px solid #e11d48;
+  margin-bottom:12px
+}
+.result-box{
+  margin-top:20px;
+  padding:12px;
+  background:#f8fafc;
+  border-radius:8px;
+}
+</style>
 </head>
+
 <body>
 
-  <div class="card">
-    <h2>命運轉盤 — 雙打 / 單打 名單產生器（動畫版）</h2>
+<div class="card">
+<h2>命運轉盤 — 雙打 / 單打 名單產生器（動畫版）</h2>
 
-    <label>名單 (每行一個名字)</label>
-    <textarea id="names" placeholder="PY突擊隊\n佑水電行\n蔬菜\n表哥"></textarea>
+<label>名單 (每行一個名字)</label>
+<textarea id="names" placeholder="PY突擊隊\n佑水電行\n蔬菜\n表哥"></textarea>
 
-    <label>雙打隊數（可留空）</label>
-    <input id="pairCount" type="number" min="0" placeholder="例如 3" />
-    <br><br>
+<label>雙打隊數（可留空）</label>
+<input id="pairCount" type="number" min="0" placeholder="例如 3" />
+<br><br>
 
-    <button id="run">準備配對</button>
-    <button id="spin" class="secondary">轉動轉盤</button>
-    <button id="autoGen" class="secondary">自動生成名單</button>
+<button id="run">準備配對</button>
+<button id="spin" class="secondary">轉動轉盤</button>
+<button id="autoGen" class="secondary">自動生成名單</button>
+<button id="drawAll" class="secondary">一鍵抽完名單</button>
 
-    <div id="wheelContainer">
-      <div class="pointer"></div>
-    </div>
+<div id="wheelContainer">
+  <div class="pointer"></div>
+</div>
 
-    <div class="result-box" id="out"></div>
-  </div>
+<div class="result-box" id="out"></div>
+</div>
 
 <script>
 function shuffle(a){
@@ -197,62 +200,4 @@ document.getElementById('run').onclick = ()=>{
     '轉盤已建立，按「轉動轉盤」開始抽人！<br><br><b>預覽名單：</b><br>' + names.join('<br>');
 };
 
-// 轉動
-document.getElementById('spin').onclick = ()=>{
-  if(!finalList.length){alert('請先按「準備配對」');return;}
-  if(!wheel){alert('轉盤尚未建立');return;}
-
-  const total = finalList.length;
-  const extraRot = Math.random() * 360;
-  const rounds = 1080;
-  const rand = rounds + extraRot;
-
-  wheel.style.transform = `rotate(${rand}deg)`;
-
-  setTimeout(()=>{
-    const chosenAngle = extraRot % 360;
-    const anglePer = 360 / total;
-    const index = Math.floor((360 - chosenAngle) / anglePer) % total;
-    const chosen = finalList[(index + total) % total];
-
-    finalList.splice((index + total) % total, 1);
-    drawnList.push(chosen);
-
-    buildWheel(finalList);
-
-    document.getElementById('out').innerHTML =
-      `<b>抽到：</b> ${chosen}<br>剩餘：${finalList.join(', ') || '無'}`;
-
-    if(finalList.length === 0){
-      const pairCount = Number(document.getElementById('pairCount').value);
-      const result = makePairs(drawnList, pairCount);
-      let html = `<br><hr><b>所有抽籤完成！</b><br><br><b>雙打配對：</b><br>`;
-      result.pairs.forEach((p,i)=>{
-        html += `${i+1}. ${p[0]} & ${p[1]}<br>`
-      });
-      html += `<br><b>單打：</b><br>${result.singles.join('<br>') || '無'}`;
-      document.getElementById('out').innerHTML += html;
-    }
-  }, 4200);
-};
-
-// 自動生成名單
-document.getElementById('autoGen').onclick = ()=>{
-  const pool = [
-    "PY突擊隊","佑水電行","范徵信行","CLOUD",
-    "表哥","蔬菜","男哥","Python",
-    "Java","JavaScript","Rust","Ruby",
-    "Dart","Go","P4","C#",
-    "C","C++","Mongo","Oracle"
-  ];
-
-  const count = Math.floor(Math.random() * 9) + 4;
-  const shuffled = shuffle(pool);
-  const selected = shuffled.slice(0, count);
-
-  document.getElementById('names').value = selected.join("\n");
-};
-</script>
-
-</body>
-</html>
+// 單次轉動動畫
