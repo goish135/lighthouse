@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casino & Lotto Empire</title>
+    <style>
+        :root {
+            --neon-blue: #00d2ff;
+            --neon-green: #39ff14;
+            --neon-red: #ff3131;
+            --neon-yellow: #ffdf00;
+            --bg-dark: #0b0118;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: white;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+            background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1511018556340-d16986a1c194?auto=format&fit=crop&q=80&w=1000');
+            background-size: cover;
+            background-attachment: fixed;
+        }
+
+        .header {
+            text-align: center;
+            text-shadow: 0 0 10px var(--neon-yellow);
+            margin-bottom: 20px;
+        }
+
+        .chips-display {
+            font-size: 24px;
+            color: var(--neon-yellow);
+            margin-bottom: 20px;
+            border: 2px solid var(--neon-yellow);
+            padding: 5px 20px;
+            border-radius: 20px;
+            box-shadow: 0 0 10px rgba(255, 223, 0, 0.5);
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 450px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .section {
+            background: rgba(20, 20, 40, 0.85);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            border: 2px solid transparent;
+            position: relative;
+        }
+
+        /* 各區塊顏色 */
+        .slots { border-color: var(--neon-blue); box-shadow: 0 0 15px var(--neon-blue); }
+        .blackjack { border-color: var(--neon-green); box-shadow: 0 0 15px var(--neon-green); }
+        .poker { border-color: var(--neon-red); box-shadow: 0 0 15px var(--neon-red); }
+        .lotto { border-color: var(--neon-yellow); box-shadow: 0 0 15px var(--neon-yellow); }
+
+        h2 { margin: 0 0 10px 0; font-size: 18px; text-transform: uppercase; }
+
+        /* 老虎機樣式 */
+        .slot-reel {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .reel {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: black;
+        }
+
+        /* 通用按鈕 */
+        button {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            margin: 5px;
+        }
+        .btn-blue { background: linear-gradient(to bottom, #005eff, #003db3); }
+        .btn-green { background: linear-gradient(to bottom, #28a745, #1e7e34); }
+        .btn-red { background: linear-gradient(to bottom, #dc3545, #bd2130); }
+        button:active { transform: scale(0.95); }
+
+        /* 台彩樣式 */
+        .lotto-balls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px;
+            margin: 10px 0;
+        }
+        .ball {
+            width: 35px;
+            height: 35px;
+            background: white;
+            color: black;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            border: 1px solid #ccc;
+        }
+        .ball.special { background: var(--neon-red); color: white; }
+
+        .result-text { font-style: italic; margin-top: 10px; height: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>🎰 Casino & Lotto Empire 🎰</h1>
+    </div>
+
+    <div class="chips-display">Chips: <span id="chip-count">1000</span></div>
+
+    <div class="game-container">
+        
+        <div class="section slots">
+            <h2>✨ Slots ✨</h2>
+            <div class="slot-reel">
+                <div class="reel" id="slot1">🍒</div>
+                <div class="reel" id="slot2">7️⃣</div>
+                <div class="reel" id="slot3">💎</div>
+            </div>
+            <button class="btn-blue" onclick="playSlots()">Spin (100)</button>
+            <div class="result-text" id="slot-res">Try Again!</div>
+        </div>
+
+        <div class="section blackjack">
+            <h2>🃏 Blackjack 🃏</h2>
+            <p>Player: <span id="bj-player">?</span> | Dealer: <span id="bj-dealer">?</span></p>
+            <button class="btn-blue" onclick="startBJ()">Start (100)</button>
+            <button class="btn-green" onclick="hitBJ()">Hit</button>
+            <button class="btn-red" onclick="standBJ()">Stand</button>
+            <div class="result-text" id="bj-res">Ready?</div>
+        </div>
+
+        <div class="section lotto">
+            <h2 style="color: var(--neon-yellow);">🇹🇼 Taiwan Lotto Twin</h2>
+            <div style="font-size: 12px; margin-bottom: 5px;">Super Lotto (Power) & Big Lotto Mode</div>
+            <div class="lotto-balls" id="lotto-container">
+                <div class="ball">?</div><div class="ball">?</div><div class="ball">?</div>
+                <div class="ball">?</div><div class="ball">?</div><div class="ball">?</div>
+                <div class="ball special">?</div>
+            </div>
+            <button class="btn-blue" onclick="quickPick()">Quick Pick (50)</button>
+            <button class="btn-red" onclick="drawLotto()">Draw (100)</button>
+            <div class="result-text" id="lotto-res" style="color: var(--neon-yellow);">Next Jackpot: $100M</div>
+        </div>
+
+    </div>
+
+    <script>
+        let chips = 1000;
+        const symbols = ['🍒', '7️⃣', '💎', '🍋', '🔔'];
+
+        function updateChips(amount) {
+            chips += amount;
+            document.getElementById('chip-count').innerText = chips;
+        }
+
+        // 老虎機邏輯
+        function playSlots() {
+            if (chips < 100) return alert("籌碼不足！");
+            updateChips(-100);
+            
+            const r1 = symbols[Math.floor(Math.random() * symbols.length)];
+            const r2 = symbols[Math.floor(Math.random() * symbols.length)];
+            const r3 = symbols[Math.floor(Math.random() * symbols.length)];
+
+            document.getElementById('slot1').innerText = r1;
+            document.getElementById('slot2').innerText = r2;
+            document.getElementById('slot3').innerText = r3;
+
+            if (r1 === r2 && r2 === r3) {
+                document.getElementById('slot-res').innerText = "JACKPOT! +500";
+                updateChips(500);
+            } else {
+                document.getElementById('slot-res').innerText = "Try Again!";
+            }
+        }
+
+        // 簡單黑傑克邏輯
+        function startBJ() {
+            if (chips < 100) return alert("籌碼不足！");
+            updateChips(-100);
+            document.getElementById('bj-player').innerText = Math.floor(Math.random() * 10) + 10;
+            document.getElementById('bj-dealer').innerText = "?";
+            document.getElementById('bj-res').innerText = "Your turn...";
+        }
+
+        function hitBJ() {
+            let current = parseInt(document.getElementById('bj-player').innerText) || 0;
+            current += Math.floor(Math.random() * 6) + 1;
+            document.getElementById('bj-player').innerText = current;
+            if (current > 21) {
+                document.getElementById('bj-res').innerText = "Bust!";
+            }
+        }
+
+        function standBJ() {
+            let dealer = Math.floor(Math.random() * 10) + 12;
+            document.getElementById('bj-dealer').innerText = dealer;
+            let player = parseInt(document.getElementById('bj-player').innerText);
+            if (player <= 21 && (dealer > 21 || player > dealer)) {
+                document.getElementById('bj-res').innerText = "You Win! +200";
+                updateChips(200);
+            } else {
+                document.getElementById('bj-res').innerText = "Dealer Wins!";
+            }
+        }
+
+        // 台彩邏輯
+        function quickPick() {
+            if (chips < 50) return alert("籌碼不足！");
+            updateChips(-50);
+            const container = document.getElementById('lotto-container');
+            container.innerHTML = '';
+            for(let i=0; i<6; i++) {
+                let num = Math.floor(Math.random() * 49) + 1;
+                container.innerHTML += `<div class="ball">${num.toString().padStart(2, '0')}</div>`;
+            }
+            let special = Math.floor(Math.random() * 8) + 1;
+            container.innerHTML += `<div class="ball special">${special}</div>`;
+            document.getElementById('lotto-res').innerText = "Numbers Selected!";
+        }
+
+        function drawLotto() {
+            if (chips < 100) return alert("籌碼不足！");
+            updateChips(-100);
+            document.getElementById('lotto-res').innerText = "Drawing... No Match. Try again!";
+        }
+    </script>
+</body>
+</html>
