@@ -2,7 +2,8 @@
 ## html,css,javascript
 
 # 📁 Project Structure
-
+## Host
+https://goish135.github.io/lighthouse/
 ## 📄 HTML Pages
 - CasinoLotto.html
 - accessbutton.html
