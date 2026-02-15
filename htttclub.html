@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HtTT Activity Platform</title>
-<link rel="icon" href="favicon.ico">   
+
 <style>
-/* =======================
-   GLOBAL
-======================= */
+
+/* ======================
+   GLOBAL (Mobile First)
+====================== */
 * {
   margin: 0;
   padding: 0;
@@ -19,54 +20,54 @@
 body {
   background: #0f172a;
   color: white;
-  transition: all 0.4s ease;
+  transition: 0.4s ease;
 }
 
-/* =======================
+/* ======================
    NAVBAR
-======================= */
+====================== */
 .navbar {
-  display: flex;
-  justify-content: space-between;
-  padding: 20px 60px;
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(10px);
   position: fixed;
   width: 100%;
+  padding: 15px 20px;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   z-index: 100;
 }
 
 .nav-links {
   display: flex;
-  gap: 30px;
+  gap: 15px;
   align-items: center;
 }
 
 .nav-links a {
-  color: white;
   text-decoration: none;
-  font-weight: 500;
-  cursor: pointer;
+  color: white;
+  font-size: 14px;
 }
 
 .lang-switch {
-  padding: 6px 10px;
+  padding: 5px;
   border-radius: 6px;
   border: none;
-  cursor: pointer;
 }
 
-/* =======================
+/* ======================
    HERO
-======================= */
+====================== */
 .hero {
-  height: 70vh;
+  height: 55vh;
   background: url('https://instasize.com/api/image/89113890da53ed5760f3e401cf4027b1c940184e4b443797c0a47ec516ef58d0.jpeg') center/cover no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   position: relative;
+  padding: 20px;
 }
 
 .hero::after {
@@ -82,115 +83,159 @@ body {
 }
 
 .hero h1 {
-  font-size: 42px;
-  margin-bottom: 15px;
+  font-size: 24px;
+  margin-bottom: 10px;
 }
 
 .hero p {
-  font-size: 18px;
+  font-size: 14px;
   opacity: 0.8;
 }
 
-/* =======================
+/* ======================
    EVENTS
-======================= */
+====================== */
 .events {
-  padding: 60px;
+  padding: 40px 20px;
+  margin-top: 60px;
 }
 
 .events h2 {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
+  font-size: 18px;
 }
 
 .cards {
   display: flex;
+  flex-direction: column;
   gap: 20px;
 }
 
 .card {
   background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(12px);
   padding: 20px;
   border-radius: 15px;
-  backdrop-filter: blur(10px);
-  flex: 1;
   transition: 0.3s;
 }
 
 .card:hover {
-  transform: translateY(-8px);
+  transform: translateY(-5px);
   background: rgba(255,255,255,0.15);
 }
 
+.card h3 {
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.card p {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
 .card button {
-  margin-top: 15px;
-  padding: 10px 15px;
+  margin-top: 12px;
+  width: 100%;
+  padding: 10px;
   border-radius: 8px;
   border: none;
-  cursor: pointer;
   background: #f59e0b;
-  color: black;
   font-weight: bold;
+  cursor: pointer;
 }
 
-/* =======================
+/* ======================
    STYLE SWITCHER
-======================= */
+====================== */
 .style-switcher {
   position: fixed;
-  right: 20px;
-  top: 120px;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
   background: rgba(0,0,0,0.6);
-  padding: 15px;
-  border-radius: 10px;
-}
-
-.style-switcher h4 {
-  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 12px;
+  overflow-x: auto;
 }
 
 .style-option {
-  padding: 8px;
-  margin-bottom: 8px;
-  cursor: pointer;
+  padding: 6px 10px;
+  background: rgba(255,255,255,0.1);
   border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
 }
 
-.style-option:hover {
-  background: rgba(255,255,255,0.2);
-}
-
-/* =======================
+/* ======================
    FOOTER
-======================= */
+====================== */
 footer {
   text-align: center;
   padding: 30px;
   opacity: 0.5;
+  font-size: 12px;
+  margin-bottom: 80px;
 }
 
-/* =======================
+/* ======================
    THEMES
-======================= */
+====================== */
+.theme-luxury { background: #0f172a; }
+.theme-wild { background: linear-gradient(135deg, #7f1d1d, #1e3a8a); }
+.theme-warm { background: linear-gradient(135deg, #78350f, #ea580c); }
+.theme-slow { background: #1e293b; }
+.theme-soft { background: #fbcfe8; color: #111; }
 
-.theme-luxury {
-  background: #0f172a;
-}
+/* ======================
+   DESKTOP (≥ 768px)
+====================== */
+@media (min-width: 768px) {
 
-.theme-wild {
-  background: linear-gradient(135deg, #7f1d1d, #1e3a8a);
-}
+  .navbar {
+    padding: 20px 60px;
+  }
 
-.theme-warm {
-  background: linear-gradient(135deg, #78350f, #ea580c);
-}
+  .hero {
+    height: 75vh;
+  }
 
-.theme-slow {
-  background: #1e293b;
-}
+  .hero h1 {
+    font-size: 42px;
+  }
 
-.theme-soft {
-  background: #fbcfe8;
-  color: #111;
+  .hero p {
+    font-size: 18px;
+  }
+
+  .events {
+    padding: 60px;
+  }
+
+  .events h2 {
+    font-size: 24px;
+  }
+
+  .cards {
+    flex-direction: row;
+  }
+
+  .card {
+    flex: 1;
+  }
+
+  .style-switcher {
+    top: 120px;
+    right: 20px;
+    left: auto;
+    bottom: auto;
+    transform: none;
+    flex-direction: column;
+  }
+
 }
 
 </style>
@@ -202,11 +247,7 @@ footer {
 <div class="navbar">
   <div><strong>HtTT Activity Platform</strong></div>
   <div class="nav-links">
-    <a>HAppy</a>
-    <a>New</a>
-    <a>Year</a>
     <a>2026</a>
-
     <select class="lang-switch" onchange="switchLang(this.value)">
       <option value="en">EN</option>
       <option value="zh">中文</option>
@@ -217,97 +258,73 @@ footer {
 <!-- HERO -->
 <section class="hero">
   <div class="hero-content">
-    <h1 id="heroTitle">HtTT Anouncement</h1>
-    <p id="heroDesc">Every Thursday night, except on public holidays at Zhen Han Sports Center.</p>
+    <h1 id="heroTitle">HtTT Announcement</h1>
+    <p id="heroDesc">Every Thursday night at Zhen Han Sports Center</p>
   </div>
 </section>
 
 <!-- EVENTS -->
 <section class="events">
-  <h2 id="latestEvents">Latest Events · Contact Window: HUANG,SYUAN-YE</h2>
+  <h2 id="latestEvents">Latest Events · HUANG,SYUAN-YE</h2>
 
   <div class="cards">
     <div class="card">
-      <h3 id="event1">The King of Science Park</h3>
-      <p>YYYY/MM/DD · No. 2-1, Xin'an Road, East District, Hsinchu City</p>
-      <a href="https://maps.app.goo.gl/88fnSnYQPY8dX5By8" target="_blank"><button id="btn2">尼尼生活館 NINI Life Square</button></a>
+      <h3>The King of Science Park</h3>
+      <p>Hsinchu City</p>
+      <button class="signupBtn">Sign Up Now</button>
     </div>
 
     <div class="card">
-      <h3 id="event2">Hsinchu tsmc Table Tennis</h3>
-      <p>Every Thursday · No. 98, Shijie Road, East District, Hsinchu City</p>
-      <a href="https://maps.app.goo.gl/Q8pkcWRJW1N66Gpm8" target="_blank"><button id="btn2">震悍球館</button></a>
+      <h3>TSMC Table Tennis</h3>
+      <p>Every Thursday</p>
+      <button class="signupBtn">Sign Up Now</button>
     </div>
 
     <div class="card">
-      <h3 id="event3">Windy City Table Tennis Cup</h3>
-      <p>YYYY/MM/DD · No. 17, Yanxin 1st Rd., Baoshan Township, Hsinchu County</p>
-      <a href="https://maps.app.goo.gl/4q7fMJbFgAGygcpN9" target="_blank"><button id="btn2">台積電七廠運動館</button></a>
+      <h3>Windy City Cup</h3>
+      <p>Baoshan Township</p>
+      <button class="signupBtn">Sign Up Now</button>
     </div>
   </div>
 </section>
 
 <!-- STYLE SWITCHER -->
 <div class="style-switcher">
-  <h4>Style Switcher</h4>
-  <div class="style-option" onclick="setTheme('luxury')">Low-key Luxury</div>
-  <div class="style-option" onclick="setTheme('wild')">Wild & Passionate</div>
-  <div class="style-option" onclick="setTheme('warm')">Warm & Cozy</div>
-  <div class="style-option" onclick="setTheme('slow')">Slow-paced</div>
-  <div class="style-option" onclick="setTheme('soft')">Gentle & Soft</div>
+  <div class="style-option" onclick="setTheme('luxury')">Luxury</div>
+  <div class="style-option" onclick="setTheme('wild')">Wild</div>
+  <div class="style-option" onclick="setTheme('warm')">Warm</div>
+  <div class="style-option" onclick="setTheme('slow')">Slow</div>
+  <div class="style-option" onclick="setTheme('soft')">Soft</div>
 </div>
 
-<!-- FOOTER -->
 <footer>
   © 2026 HtTT Activity Platform
 </footer>
 
 <script>
 
-/* =======================
-   LANGUAGE SWITCH
-======================= */
 function switchLang(lang) {
+  const title = document.getElementById("heroTitle");
+  const desc = document.getElementById("heroDesc");
+  const events = document.getElementById("latestEvents");
+  const buttons = document.querySelectorAll(".signupBtn");
+
   if(lang === "zh") {
-    document.getElementById("heroTitle").innerText = "新竹台積電桌球社團公告";
-    document.getElementById("heroDesc").innerText = "每週四晚上，例假日除外，震悍球館開打";
-    document.getElementById("latestEvents").innerText = "最新活動 · 聯絡窗口: 黃炫燁";
-    document.getElementById("btn1").innerText = "立即報名";
-    document.getElementById("btn2").innerText = "立即報名";
-    document.getElementById("btn3").innerText = "立即報名";
+    title.innerText = "新竹台積電桌球社團公告";
+    desc.innerText = "每週四晚上 震悍球館開打";
+    events.innerText = "最新活動 · 聯絡窗口 黃炫燁";
+    buttons.forEach(btn => btn.innerText = "立即報名");
   } else {
-    document.getElementById("heroTitle").innerText = "HtTT Anouncement";
-    document.getElementById("heroDesc").innerText = "Every Thursday night, except on public holidays at Zhen Han Sports Center";
-    document.getElementById("latestEvents").innerText = "Latest Events · Contact Window: HUANG,SYUAN-YE";
-    document.getElementById("btn1").innerText = "Sign Up Now";
-    document.getElementById("btn2").innerText = "Sign Up Now";
-    document.getElementById("btn3").innerText = "Sign Up Now";
+    title.innerText = "HtTT Announcement";
+    desc.innerText = "Every Thursday night at Zhen Han Sports Center";
+    events.innerText = "Latest Events · HUANG,SYUAN-YE";
+    buttons.forEach(btn => btn.innerText = "Sign Up Now");
   }
 }
 
-/* =======================
-   THEME SWITCH
-======================= */
 function setTheme(theme) {
   document.body.className = "";
-
-  switch(theme) {
-    case "luxury":
-      document.body.classList.add("theme-luxury");
-      break;
-    case "wild":
-      document.body.classList.add("theme-wild");
-      break;
-    case "warm":
-      document.body.classList.add("theme-warm");
-      break;
-    case "slow":
-      document.body.classList.add("theme-slow");
-      break;
-    case "soft":
-      document.body.classList.add("theme-soft");
-      break;
-  }
+  document.body.classList.add("theme-" + theme);
 }
 
 </script>
