@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" href="favicon.ico">   
 <title>HtTT Activity Platform</title>
+
 <style>
 
 /* ======================
@@ -191,41 +192,75 @@ footer {
 .theme-soft { background: #fbcfe8; color: #111; }
 
 /* ======================
-   DESKTOP (≥ 768px)
+   TROPHY PANEL
+====================== */
+.trophy-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  width: 90%;
+  max-width: 600px;
+  background: rgba(15,23,42,0.95);
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 0 40px rgba(255,215,0,0.4);
+  display: none;
+  opacity: 0;
+  transition: 0.4s ease;
+  z-index: 9999;
+}
+
+.trophy-panel.show {
+  display: block;
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.trophy-panel h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: gold;
+}
+
+.trophy-panel table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.trophy-panel th,
+.trophy-panel td {
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 10px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.trophy-panel th {
+  background: gold;
+  color: black;
+}
+
+/* ======================
+   DESKTOP
 ====================== */
 @media (min-width: 768px) {
 
-  .navbar {
-    padding: 20px 60px;
-  }
+  .navbar { padding: 20px 60px; }
 
-  .hero {
-    height: 75vh;
-  }
+  .hero { height: 75vh; }
 
-  .hero h1 {
-    font-size: 42px;
-  }
+  .hero h1 { font-size: 42px; }
 
-  .hero p {
-    font-size: 18px;
-  }
+  .hero p { font-size: 18px; }
 
-  .events {
-    padding: 60px;
-  }
+  .events { padding: 60px; }
 
-  .events h2 {
-    font-size: 24px;
-  }
+  .events h2 { font-size: 24px; }
 
-  .cards {
-    flex-direction: row;
-  }
+  .cards { flex-direction: row; }
 
-  .card {
-    flex: 1;
-  }
+  .card { flex: 1; }
 
   .style-switcher {
     top: 120px;
@@ -235,7 +270,6 @@ footer {
     transform: none;
     flex-direction: column;
   }
-
 }
 
 </style>
@@ -243,7 +277,6 @@ footer {
 
 <body class="theme-luxury">
 
-<!-- NAVBAR -->
 <div class="navbar">
   <div><strong>HtTT Activity Platform</strong></div>
   <div class="nav-links">
@@ -255,7 +288,6 @@ footer {
   </div>
 </div>
 
-<!-- HERO -->
 <section class="hero">
   <div class="hero-content">
     <h1 id="heroTitle">HtTT Announcement</h1>
@@ -263,23 +295,19 @@ footer {
   </div>
 </section>
 
-<!-- EVENTS -->
 <section class="events">
   <h2 id="latestEvents">Latest Events · HUANG,SYUAN-YE</h2>
-
   <div class="cards">
     <div class="card">
       <h3>The King of Science Park</h3>
       <p>Hsinchu City</p>
       <button class="signupBtn">Sign Up Now</button>
     </div>
-
     <div class="card">
       <h3>TSMC Table Tennis</h3>
       <p>Every Thursday</p>
       <button class="signupBtn">Sign Up Now</button>
     </div>
-
     <div class="card">
       <h3>Windy City Cup</h3>
       <p>Baoshan Township</p>
@@ -288,7 +316,41 @@ footer {
   </div>
 </section>
 
-<!-- STYLE SWITCHER -->
+<!-- 🏆 Trophy Panel -->
+<div id="trophyPanel" class="trophy-panel">
+  <h2>🏆 Trophy Management 2026</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Member</th>
+        <th>Rank</th>
+        <th>Points</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Huang</td>
+        <td>Gold</td>
+        <td>180</td>
+        <td>Champion</td>
+      </tr>
+      <tr>
+        <td>Lin</td>
+        <td>Silver</td>
+        <td>150</td>
+        <td>Runner-Up</td>
+      </tr>
+      <tr>
+        <td>Chen</td>
+        <td>Bronze</td>
+        <td>120</td>
+        <td>Top 3</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <div class="style-switcher">
   <div class="style-option" onclick="setTheme('luxury')">Luxury</div>
   <div class="style-option" onclick="setTheme('wild')">Wild</div>
@@ -326,6 +388,27 @@ function setTheme(theme) {
   document.body.className = "";
   document.body.classList.add("theme-" + theme);
 }
+
+/* SECRET KEY */
+let secretBuffer = "";
+
+document.addEventListener("keydown", function(e) {
+
+  if (/^[a-zA-Z0-9]$/.test(e.key)) {
+    secretBuffer += e.key.toUpperCase();
+  }
+
+  if (secretBuffer.length > 7) {
+    secretBuffer = secretBuffer.slice(-7);
+  }
+
+  if (secretBuffer === "WTT2026") {
+    const panel = document.getElementById("trophyPanel");
+    panel.classList.toggle("show");
+    secretBuffer = "";
+  }
+
+});
 
 </script>
 
