@@ -1,6 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="favicon.ico">   
+<title>HtTT Activity Platform</title>
+
+<style>
+
+/* ======================
+   GLOBAL (Mobile First)
+====================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+  background: #0f172a;
+  color: white;
+  transition: 0.4s ease;
+}
+
+/* ======================
+   NAVBAR
+====================== */
+.navbar {
+  position: fixed;
+  width: 100%;
+  padding: 15px 20px;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+}
+
+.nav-links {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.lang-switch {
+  padding: 5px;
+  border-radius: 6px;
+  border: none;
+}
+
+/* ======================
+   HERO
+====================== */
+.hero {
+  height: 55vh;
+  background: url('https://instasize.com/api/image/89113890da53ed5760f3e401cf4027b1c940184e4b443797c0a47ec516ef58d0.jpeg') center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  padding: 20px;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+.hero h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.hero p {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+/* ======================
+   EVENTS
+====================== */
+.events {
+  padding: 40px 20px;
+  margin-top: 60px;
+}
+
+.events h2 {
+  margin-bottom: 20px;
+  font-size: 18px;
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.card {
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(12px);
+  padding: 20px;
+  border-radius: 15px;
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  background: rgba(255,255,255,0.15);
+}
+
+.card h3 {
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.card p {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.card button {
+  margin-top: 12px;
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #f59e0b;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* ======================
+   TROPHY OVERLAY
+====================== */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  z-index: 9998;
+}
+
+.overlay.show {
+  display: block;
+}
+
+/* ======================
+   TROPHY PANEL
+====================== */
+.trophy-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  width: 90%;
+  max-width: 600px;
+  background: rgba(15,23,42,0.95);
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 0 40px rgba(255,215,0,0.4);
+  opacity: 0;
+  transition: 0.4s ease;
+  z-index: 9999;
+  display: none;
+}
+
+.trophy-panel.show {
+  display: block;
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.trophy-panel h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: gold;
+}
+
+.trophy-panel table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.trophy-panel th,
+.trophy-panel td {
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 10px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.trophy-panel th {
+  background: gold;
+  color: black;
+}
+
+/* ======================
+   STYLE SWITCHER
+====================== */
+.style-switcher {
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  background: rgba(0,0,0,0.6);
+  padding: 10px;
+  border-radius: 12px;
+  overflow-x: auto;
+}
+
+.style-option {
+  padding: 6px 10px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+footer {
+  text-align: center;
+  padding: 30px;
+  opacity: 0.5;
+  font-size: 12px;
+  margin-bottom: 80px;
+}
+
+/* ======================
+   THEMES
+====================== */
+.theme-luxury { background: #0f172a; }
+.theme-wild { background: linear-gradient(135deg, #7f1d1d, #1e3a8a); }
+.theme-warm { background: linear-gradient(135deg, #78350f, #ea580c); }
+.theme-slow { background: #1e293b; }
+.theme-soft { background: #fbcfe8; color: #111; }
+
+@media (min-width: 768px) {
+  .cards { flex-direction: row; }
+  .card { flex: 1; }
+}
+
+</style>
+</head>
+
+<body class="theme-luxury">
+
+<div class="navbar">
+  <div><strong>HtTT Activity Platform</strong></div>
+  <div class="nav-links">
+    <a onclick="toggleTrophy()">Awards</a>
+    <select class="lang-switch" onchange="switchLang(this.value)">
+      <option value="en">EN</option>
+      <option value="zh">中文</option>
+    </select>
+  </div>
+</div>
+
+<section class="hero">
+  <div class="hero-content">
+    <h1 id="heroTitle">HtTT Announcement</h1>
+    <p id="heroDesc">Every Thursday night at Zhen Han Sports Center</p>
+  </div>
+</section>
+
+<section class="events">
+  <h2 id="latestEvents">Latest Events · HUANG,SYUAN-YE</h2>
+  <div class="cards">
+    <div class="card">
+      <h3>The King of Science Park</h3>
+      <p>Hsinchu City</p>
+      <button class="signupBtn">Sign Up Now</button>
+    </div>
+    <div class="card">
+      <h3>TSMC Table Tennis</h3>
+      <p>Every Thursday</p>
+      <button class="signupBtn">Sign Up Now</button>
+    </div>
+    <div class="card">
+      <h3>Windy City Cup</h3>
+      <p>Baoshan Township</p>
+      <button class="signupBtn">Sign Up Now</button>
+    </div>
+  </div>
+</section>
+
+<div id="overlay" class="overlay" onclick="closeTrophy()"></div>
+
+<div id="trophyPanel" class="trophy-panel">
+  <h2>🏆 Trophy Management 2026</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Year</th>
+        <th>Owner</th>
+        <th>Location</th>
+        <th>Remark</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>111</td><td>Team</td><td>RD Center</td><td>Champion</td></tr>
+      <tr><td>112</td><td>Team</td><td>RD Center</td><td>Champion</td></tr>
+      <tr><td>113</td><td>Team</td><td>RD Center</td><td>Champion</td></tr>
+      <tr><td>114</td><td>Team</td><td>HQ BR</td><td>Champion</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<footer>
+  © 2026 HtTT Activity Platform
+</footer>
+
+<script>
+
 function toggleTrophy() {
-  const panel = document.getElementById("trophyPanel");
-  panel.classList.toggle("show");
+  document.getElementById("trophyPanel").classList.toggle("show");
+  document.getElementById("overlay").classList.toggle("show");
+}
+
+function closeTrophy() {
+  document.getElementById("trophyPanel").classList.remove("show");
+  document.getElementById("overlay").classList.remove("show");
 }
 
 function switchLang(lang) {
@@ -22,15 +360,13 @@ function switchLang(lang) {
   }
 }
 
-function setTheme(theme) {
-  document.body.className = "";
-  document.body.classList.add("theme-" + theme);
-}
-
-/* SECRET KEY */
 let secretBuffer = "";
 
 document.addEventListener("keydown", function(e) {
+
+  if (e.key === "Escape") {
+    closeTrophy();
+  }
 
   if (/^[a-zA-Z0-9]$/.test(e.key)) {
     secretBuffer += e.key.toUpperCase();
@@ -41,8 +377,13 @@ document.addEventListener("keydown", function(e) {
   }
 
   if (secretBuffer === "WTT2026") {
-    toggleTrophy();   // ✅ 改成呼叫 function
+    toggleTrophy();
     secretBuffer = "";
   }
 
 });
+
+</script>
+
+</body>
+</html>
