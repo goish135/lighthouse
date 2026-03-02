@@ -9,7 +9,7 @@
 <style>
 
 /* ======================
-   GLOBAL (Bright Sport)
+   GLOBAL
 ====================== */
 * {
   margin: 0;
@@ -71,40 +71,54 @@ body {
 }
 
 /* ======================
-   HERO
+   HERO (NO CROP SAFE)
 ====================== */
 .hero {
-  height: 55vh;
-  background: url('https://instasize.com/api/image/0a4e0ec39f7feaf0ac665e9337ba746a03d2b33b581e289cf8465f59dde3bca4.jpeg') center/cover no-repeat;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
   position: relative;
-  padding: 20px;
+  width: 100%;
+  overflow: hidden;
+  background: black;
+  margin-top: 60px; /* 避免被 navbar 擋住 */
 }
 
+.hero-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* 漸層遮罩 */
 .hero::after {
   content: "";
   position: absolute;
   inset: 0;
   background: linear-gradient(
-    to bottom,
-    rgba(249,115,22,0.65),
-    rgba(239,68,68,0.65)
+    to top,
+    rgba(0,0,0,0.8) 0%,
+    rgba(0,0,0,0.3) 40%,
+    rgba(0,0,0,0) 70%
   );
 }
 
-.hero-content{
-  position:relative;
-  z-index:2;
+.hero-content {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  text-align: center;
   color: white;
+  width: 90%;
+  max-width: 800px;
 }
 
 .hero h1 {
-  font-size: 26px;
+  font-size: 28px;
+  font-weight: 900;
   margin-bottom: 10px;
-  font-weight: 800;
+  border-bottom: 4px solid #f97316;
+  display: inline-block;
+  padding-bottom: 6px;
 }
 
 .hero p {
@@ -117,7 +131,6 @@ body {
 ====================== */
 .events {
   padding: 60px 20px;
-  margin-top: 60px;
 }
 
 .events h2 {
@@ -176,7 +189,7 @@ body {
 }
 
 /* ======================
-   TROPHY OVERLAY
+   TROPHY
 ====================== */
 .overlay {
   position: fixed;
@@ -190,9 +203,6 @@ body {
   display: block;
 }
 
-/* ======================
-   TROPHY PANEL
-====================== */
 .trophy-panel {
   position: fixed;
   top: 50%;
@@ -259,6 +269,11 @@ footer {
   .card { flex: 1; }
 }
 
+@media (max-width: 480px) {
+  .hero h1 { font-size: 22px; }
+  .hero p { font-size: 14px; }
+}
+
 </style>
 </head>
 
@@ -276,6 +291,11 @@ footer {
 </div>
 
 <section class="hero">
+  <!-- 換成你的封面圖片 -->
+  <img src="https://instasize.com/api/image/0a4e0ec39f7feaf0ac665e9337ba746a03d2b33b581e289cf8465f59dde3bca4.jpeg" 
+       alt="HtTT Cover" 
+       class="hero-img">
+
   <div class="hero-content">
     <h1 id="heroTitle">HtTT Announcement</h1>
     <p id="heroDesc">Every Thursday night at Zhen Han Sports Center</p>
@@ -284,6 +304,7 @@ footer {
 
 <section class="events">
   <h2 id="latestEvents">Latest Events · Contact Window · HUANG, SYUAN-YE</h2>
+
   <div class="cards">
     <div class="card">
       <h3>The King of Science Park</h3>
@@ -298,7 +319,7 @@ footer {
       <p>Every Thursday</p>
       <a href="https://maps.app.goo.gl/LQ7HKjvZgRxr2oxf6" target="_blank">
         <button class="signupBtn">GO!</button>
-      </a>   
+      </a>
     </div>
 
     <div class="card">
@@ -306,7 +327,7 @@ footer {
       <p>Baoshan Township</p>
       <a href="https://maps.app.goo.gl/uwjhuWEZMuhdpkg49" target="_blank">
         <button class="signupBtn">GO!</button>
-      </a> 
+      </a>
     </div>
   </div>
 </section>
@@ -338,7 +359,6 @@ footer {
 </footer>
 
 <script>
-
 function toggleTrophy() {
   document.getElementById("trophyPanel").classList.toggle("show");
   document.getElementById("overlay").classList.toggle("show");
@@ -367,7 +387,6 @@ function switchLang(lang) {
     buttons.forEach(btn => btn.innerText = "GO!");
   }
 }
-
 </script>
 
 </body>
