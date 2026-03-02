@@ -257,7 +257,23 @@ body {
 
 .trophy-panel table {
   width: 100%;
-  border-collapse: collapse;
+  table-layout: fixed;
+  word-wrap: break-word;
+}
+
+/* 手機版強制橫向內容收縮 */
+@media (max-width: 480px) {
+
+  .trophy-panel {
+    padding: 18px;
+  }
+
+  .trophy-panel th,
+  .trophy-panel td {
+    padding: 8px;
+    font-size: 12px;
+  }
+
 }
 
 .trophy-panel th {
